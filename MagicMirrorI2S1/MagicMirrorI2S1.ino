@@ -14,19 +14,20 @@ AudioOutputI2S i2s1;            //TODO: i2s1 ombouwen
 AudioAnalyzePeak peak1;         //xy=512,410
 AudioEffectEnvelope envelope1;  //xy=580,48
 AudioControlSGTL5000 sgtl5000_1;
+AudioRecordQueue queue1;
 
 AudioConnection patchCord1(adc1, amp1);
 AudioConnection patchCord2(amp1, delay1);
 AudioConnection Patchcord(amp1, peak1);
 AudioConnection Patchcord5(delay1, envelope1);
-// AudioConnection patchCord3(envelope1, 0, pt8211_2_1, 0);
-// AudioConnection patchCord4(envelope1, 0, pt8211_2_1, 1);
 AudioConnection patchCord3(envelope1, 0, i2s1, 0);
 AudioConnection patchCord4(envelope1, 0, i2s1, 1);
+AudioConnection PatchCord6(envelope1, 0, queue1, 0);
 
-// AudioConnection patchCord3(amp1, 0, pt8211_2_1, 0); // STRAIGHT PASSTHROUGH FOR TESTING AND SANITY
-// File myFile;
 
+
+
+//Audioplayer initialisation
 const int chipSelect = 10;
 audioPlayer* player;
 
@@ -36,14 +37,15 @@ float gainPotRead = 1;
 int ledPin = 23;
 int peakValuePot = 20;
 float peakValuePotRead;
+float peakVal;
 elapsedMillis millistimer;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
 
   player = new audioPlayer(chipSelect);
   while (!Serial) {
-    ;  // wait for serial port to connect.
+    ;
   }
 
 
@@ -63,26 +65,30 @@ void setup() {
 
   delay1.delay(0, 300);
 
-  envelope1.attack(10);  // ms
+  //Envelope functions
+  envelope1.attack(10);
   envelope1.hold(50);
   envelope1.decay(100);
   envelope1.sustain(0.5);
   envelope1.release(300);
+
+  // start the que to record the values
+  queue1.begin();
 }
 
 
 void loop() {
-  gainPotRead = analogRead(gainPotPin);
-  // Serial.println(gainPotRead / 2000);
 
-  // Serial.print("peakvaluepotread");
-  // Serial.println(peakValuePotRead / 4000);
+  printMyInfo();
+  if (queue1.available() > 0) { printMyAudio(); }
+
+  gainPotRead = analogRead(gainPotPin);
+
   peakValuePotRead = analogRead(peakValuePot);
   amp1.gain(gainPotRead / 2000);  // Resolution of 0 to 4 instead of 0 to 4048
 
   if (peak1.available()) {
-    float peakVal = peak1.read();
-    // Serial.println(peakVal);
+    peakVal = peak1.read();
 
     if (peakVal > peakValuePotRead / 4000) {  // root 4000 cause you want it from 0 to 1
 
@@ -92,4 +98,27 @@ void loop() {
     }
   }
   // delay(150);
+}
+
+void printMyInfo() {
+  Serial.print("peakvaluepotread / 2000:  ");
+  Serial.println(peakValuePotRead / 4000);
+  Serial.print("gainPotRead / 2000:       ");
+  Serial.println(gainPotRead / 2000);
+  Serial.print("peakValue:                ");
+  Serial.println(peakVal);
+}
+
+void printMyAudio() {
+  int16_t* block = queue1.readBuffer();
+
+  if (block) {
+    for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
+      int16_t sample = block[i];
+      double normalized = sample / 32768.0;
+      // Serial.println(normalized, 6);
+    }
+    queue1.freeBuffer();
+  }
+  
 }
