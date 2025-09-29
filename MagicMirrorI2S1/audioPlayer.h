@@ -4,6 +4,8 @@
 #include <iostream>
 #include <SD.h>
 
+#include "global.h"
+
 class audioPlayer {
 private:
   void createFolder();

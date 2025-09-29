@@ -116,7 +116,7 @@ void printMyAudio() {
     for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
       int16_t sample = block[i];
       double normalized = sample / 32768.0;
-      // Serial.println(normalized, 6);
+      Serial.println(normalized, 6);
     }
     queue1.freeBuffer();
   }
