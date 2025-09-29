@@ -3,28 +3,23 @@
 //
 
 #pragma once
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <Arduino.h>
+#include "global.h"
 #include <SD.h>
-
 
 class SaveAudio {
 public:
-  SaveAudio();
+  SaveAudio(int maxBufferLength);
   ~SaveAudio();
 
   void writeToFile(int timestamp);
   void write(double sample);
-  unsigned int getBufferSize();
-
-
+  int getBufferSize();
 
 private:
-  unsigned int bufferSize = 0;
-  std::vector<double> buffer;
+  bool writeToFileBool = true;
+  int bufferSize = 0;
+  Vector<double> buffer;
+  std::string file = test.dat
 
-  const std::string sourcePath = SOURCE_DIR;
-  std::fstream fout;
+  std::string sourcePath = SOURCE_DIR;
 };
