@@ -4,6 +4,7 @@
 #include <SD.h>
 #include <SerialFlash.h>
 #include "audioPlayer.h"
+#include "saveAudio.h" 
 
 // GUItool: begin automatically generated code
 AudioInputAnalog adc1(A2);
@@ -31,6 +32,9 @@ AudioConnection PatchCord6(envelope1, 0, queue1, 0);
 const int chipSelect = 10;
 audioPlayer* player;
 
+//AudioSaver initialisaation ;
+saveAudio* audioSaver;
+
 
 int gainPotPin = 21;
 float gainPotRead = 1;
@@ -44,10 +48,10 @@ void setup() {
   Serial.begin(115200);
 
   player = new audioPlayer(chipSelect);
+  audioSaver = new saveAudio();
   while (!Serial) {
     ;
   }
-
 
 
   AudioMemory(240);

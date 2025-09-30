@@ -1,4 +1,4 @@
-#include "audioPlayer.h"
+#include "audioFolderInit.h"
 #include <Arduino.h>
 #include <SD.h>
 
@@ -50,8 +50,6 @@ void audioPlayer::createFolder() {
 }
 
 void audioPlayer::freeAudioBinaryFolder() {
-
-  // if (SD.exists("magicMirror/audioBinaries/*")){
-  //   Serial.println("theres stuff in this bih /");
-  // }
+  SD.rmdir("magicMirror/audioBinaries");
+  Serial.println("removing magicMirror/audioBinaries");
 }

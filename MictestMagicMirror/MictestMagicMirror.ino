@@ -5,7 +5,7 @@
 #include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
-AudioInputAnalog adc1(A2);
+AudioInputAnalog adc1(A2);√
 AudioInputAnalog adc2(A3);
 AudioAmplifier amp1;
 AudioAmplifier amp2;

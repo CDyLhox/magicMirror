@@ -1,5 +1,5 @@
-#ifndef _AUDIOPLAYER_H_
-#define _AUDIOPLAYER_H_
+#ifndef _AUDIOFOLDERINIT_H_
+#define _AUDIOFOLDERINIT_H_
 
 #include <iostream>
 #include <SD.h>
