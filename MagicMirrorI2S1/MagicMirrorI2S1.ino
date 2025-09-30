@@ -45,27 +45,30 @@ float peakVal;
 elapsedMillis millistimer;
 
 void setup() {
+  //quick serial because i like em nice and responsive 
   Serial.begin(115200);
 
   player = new audioPlayer(chipSelect);
-  audioSaver = new saveAudio();
+  audioSaver = new saveAudio(44100);
+  //While not serial, dont do shit.
   while (!Serial) {
     ;
   }
 
-
+  //setup the audiomem please also the alanog read reso q
   AudioMemory(240);
-  amp1.gain(1.0);
   analogReadResolution(12);
+
+  pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, HIGH);
+
+  //From here on out its audio functions
+  //sset the speaker on, set the amp gain, yuh, and set the delay, delay, 
+  amp1.gain(1.0);
   delay1.delay(0, 1000);
 
   sgtl5000_1.enable();
   sgtl5000_1.volume(20);
-
-  pinMode(ledPin, OUTPUT);
-
-  amp1.gain(1);
-  digitalWrite(ledPin, HIGH);
 
   delay1.delay(0, 300);
 
@@ -76,7 +79,7 @@ void setup() {
   envelope1.sustain(0.5);
   envelope1.release(300);
 
-  // start the que to record the values
+  // start the que to record the incoming mic values
   queue1.begin();
 }
 
