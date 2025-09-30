@@ -19,7 +19,6 @@ private:
   bool writeToFileBool = true;
   int bufferSize = 0;
   Vector<double> buffer;
-  std::string file = test.dat
 
-  std::string sourcePath = SOURCE_DIR;
+  File fout;
 };

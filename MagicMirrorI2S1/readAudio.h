@@ -21,11 +21,8 @@ private:
 
   double *buffer = nullptr;
   int bufferSize = 0;
-      std::string file = test.dat
-
-  std::string sourcePath = SOURCE_DIR;
-  std::fstream fin;
-
   int readHead = 0;
+
+  File fin;
 };
 

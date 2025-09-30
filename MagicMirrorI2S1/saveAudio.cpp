@@ -6,24 +6,24 @@
 
 
 SaveAudio::SaveAudio(int maxBufferLength){
-  std::cout << "buffer - constructor" << std::endl;
+  Serial.println("SaveAudio - constructor");
 
   float storage_array[int maxBufferLength];
   buffer.setStorage(storage_array); 
 }
 
 SaveAudio::~SaveAudio(){
-  std::cout << "buffer - destructor" << std::endl;
+  Serial.println("SaveAudio - destructor");
 }
 
 //this is called to write the buffer away after it's full
 void SaveAudio::writeToFile(int timestamp){
-  String filename = audio;
+  String filename = SOURCE_DIR + "/" + timestamp + ".dat";
 
   fout = SD.open(filename, FILE_WRITE);
 
   if (!fout) {
-    std::cout << "Error opening file!" << std::endl;
+    Serial.println("Error opening file!");
   }
   //check if writeToFile has been called before
   else if (writeToFileBool == true){
@@ -33,7 +33,7 @@ void SaveAudio::writeToFile(int timestamp){
     bufferSize = buffer.size();
 
     //writes the buffer away to a binary file
-    fout.write(reinterpret_cast<char*>(&buffer[0]), buffer.size() * sizeof(double));
+    fout.write(reinterpret_cast<char*>(buffer), buffer.size() * sizeof(double));
     fout.close();
 
     //clear buffer after use to make ready for next use

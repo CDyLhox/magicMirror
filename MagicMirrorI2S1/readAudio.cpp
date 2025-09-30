@@ -3,8 +3,6 @@
 //
 #include "readAudio.h"
 
-#include <string>
-
 //For Dylan:
 //HOW TO USE -
 // 1. call 'readFromFile' with the timestamp of the file you want to read
@@ -12,7 +10,7 @@
 // 2. use 'read' to get the values out of the buffer
 
 ReadAudio::ReadAudio(int bufferSize){
-    std::cout << "buffer - constructor" << std::endl;
+       Serial.println("ReadAudio - constructor");
 
     this->bufferSize = bufferSize;
 
@@ -24,21 +22,21 @@ ReadAudio::ReadAudio(int bufferSize){
 }
 
 ReadAudio::~ReadAudio(){
-    std::cout << "buffer - destructor" << std::endl;
+    Serial.println("ReadAudio - destructor");
     deleteBuffer();
 }
 
 void ReadAudio::readFromFile(int timestamp){
 
-    // String time = String(timestamp);
+  String filename = SOURCE_DIR + "/" + timestamp + ".dat";
 
     //reconstructs the filename when given the proper timestamp
 
 
-    fin.open(file, std::ios::in | std::ios::binary);
+    fin = SD.open(filename, FILE_READ);
 
     if (!fin) {
-        std::cout << "Error opening file!" << std::endl;
+            Serial.println("Error opening file!");
     }
     else {
         //writes the binary file to the array 'buffer'

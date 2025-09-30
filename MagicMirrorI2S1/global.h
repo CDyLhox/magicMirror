@@ -5,5 +5,6 @@
 #pragma once
 #include <Streaming.h>
 #include <Vector.h>
+#include <String>
 
-std::string SOURCE_DIR = "";
+String SOURCE_DIR = "";
