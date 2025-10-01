@@ -8,3 +8,8 @@ welkome to the magic mirror repo. this is where Cas, Friso, and I are creating t
 ### some links 
 - https://www.soundimports.eu/en/sure-electronics-aa-ab32178.html
 - https://www.soundimports.eu/en/dayton-audio-daex32qmb-4.html
+
+## DEPENDENCIES 
+- streaming.h arduino library
+- standardcpp arduino library
+- vectors arduino library

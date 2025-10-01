@@ -4,7 +4,10 @@
 
 #pragma once
 #include "global.h"
+#include <Arduino.h>
+#include <SPI.h>
 #include <SD.h>
+//#include <StandardCplusplus.h>
 
 class SaveAudio {
 public:

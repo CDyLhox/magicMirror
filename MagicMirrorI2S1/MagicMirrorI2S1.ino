@@ -3,7 +3,7 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-#include "audioPlayer.h"
+#include "audioFolderInit.h"
 #include "saveAudio.h" 
 
 // GUItool: begin automatically generated code
@@ -32,8 +32,8 @@ AudioConnection PatchCord6(envelope1, 0, queue1, 0);
 const int chipSelect = 10;
 audioPlayer* player;
 
-//AudioSaver initialisaation ;
-saveAudio* audioSaver;
+//AudioSaver initilisaion
+SaveAudio* audioSaver;
 
 
 int gainPotPin = 21;
@@ -48,12 +48,13 @@ void setup() {
   //quick serial because i like em nice and responsive 
   Serial.begin(115200);
 
-  player = new audioPlayer(chipSelect);
-  audioSaver = new saveAudio(44100);
   //While not serial, dont do shit.
   while (!Serial) {
     ;
   }
+  
+  player = new audioPlayer(chipSelect);
+  audioSaver = new SaveAudio(44100);
 
   //setup the audiomem please also the alanog read reso q
   AudioMemory(240);
@@ -104,7 +105,6 @@ void loop() {
       envelope1.noteOff();
     }
   }
-  // delay(150);
 }
 
 void printMyInfo() {
@@ -123,7 +123,8 @@ void printMyAudio() {
     for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
       int16_t sample = block[i];
       double normalized = sample / 32768.0;
-      Serial.println(normalized, 6);
+      audioSaver->write(normalized);
+      //Serial.println(normalized, 6); //the normalised print is hard on the workload of the cpu
     }
     queue1.freeBuffer();
   }

@@ -7,4 +7,6 @@
 #include <Vector.h>
 #include <String>
 
+#include <SPI.h>
+
 String SOURCE_DIR = "magicMirror/audioBinaries";

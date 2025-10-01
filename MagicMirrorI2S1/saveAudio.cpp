@@ -2,6 +2,8 @@
 // Created by cashu on 10/09/2025.
 //
 #include "saveAudio.h"
+#include <Arduino.h>
+#include <SD.h>
 #include <string>
 
 
