@@ -32,7 +32,7 @@ void ReadAudio::readFromFile(int timestamp){
 
     //reconstructs the filename when given the proper timestamp
 
-
+    //FIXME: deze is broken, na een tijdje schrijft hij alleen nog lege timestamps weg
     fin = SD.open(filename.c_str(), FILE_READ);
 
     if (!fin) {
