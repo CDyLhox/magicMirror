@@ -2,28 +2,21 @@
 // Created by cashu on 10/09/2025.
 //
 
-#pragma once
-#include <Streaming.h>
-#include <Vector.h>
-#include <String>
+#ifndef _GLOBAL_H_
+#define _GLOBAL_H_
 #include <SD.h>
 #include <SPI.h>
-elapsedMillis millistimer;
-
-String SOURCE_DIR_BIN = "magicMirror/audioBinaries";
-
-
-//TODO - FIXME
-int timestamp = 10;
+#include <Streaming.h>
+#include <String>
+#include <Vector.h>
 
 
+// TODO - FIXME
+extern unsigned long timestamp;
+extern int fileIndex;
+extern char filenames[100]; 
+extern String SOURCE_DIR_BIN;
 
+void pushToArray(int value);
 
-int filenames[1000];
-
-  int fileIndex = 0;
-
-  void pushToArray(int timestamp){
-      filenames[0] = timestamp;
-      fileIndex++;
-  }
+#endif

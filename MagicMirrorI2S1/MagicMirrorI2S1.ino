@@ -4,6 +4,7 @@
 #include <SD.h>
 #include <SerialFlash.h>
 #include "audioFolderInit.h"
+#include "global.h"
 #include "saveAudio.h" 
 
 // GUItool: begin automatically generated code
