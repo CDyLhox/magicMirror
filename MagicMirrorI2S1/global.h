@@ -10,3 +10,13 @@
 #include <SPI.h>
 
 String SOURCE_DIR = "magicMirror/audioBinaries";
+
+
+int filenames[1000];
+
+int index = 0;
+
+void pushToArray(int timestamp){
+    file[0] = timestamp;
+    index++;
+}

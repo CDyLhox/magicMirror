@@ -29,7 +29,8 @@ void SaveAudio::writeToFile(int timestamp){
   }
   //check if writeToFile has been called before
   else if (writeToFileBool == true){
-  
+    pushToArray(timestamp);
+
     writeToFileBool = false;
 
     bufferSize = buffer.size();
