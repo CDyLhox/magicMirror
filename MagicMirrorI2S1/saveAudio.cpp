@@ -19,6 +19,8 @@ SaveAudio::~SaveAudio(){
 
 //this is called to write the buffer away after it's full
 void SaveAudio::writeToFile(int timestamp){
+    Serial.print("SaveAudio::writeToFile() ");
+    Serial.println(timestamp);
   String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
   fout = SD.open(filename.c_str(), FILE_WRITE);

@@ -87,7 +87,7 @@ void setup() {
 
 void loop() {
 
-  printMyInfo();
+ // printMyInfo();
   if (queue1.available() > 0) { printMyAudio(); }
 
   gainPotRead = analogRead(gainPotPin);
