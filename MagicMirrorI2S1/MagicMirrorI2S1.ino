@@ -42,7 +42,6 @@ int ledPin = 23;
 int peakValuePot = 20;
 float peakValuePotRead;
 float peakVal;
-elapsedMillis millistimer;
 
 void setup() {
   //quick serial because i like em nice and responsive 
@@ -54,7 +53,7 @@ void setup() {
   }
   
   player = new audioPlayer(chipSelect);
-  audioSaver = new SaveAudio(44100);
+  audioSaver = new SaveAudio();
 
   //setup the audiomem please also the alanog read reso q
   AudioMemory(240);
