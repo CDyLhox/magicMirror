@@ -28,12 +28,12 @@ ReadAudio::~ReadAudio(){
 
 void ReadAudio::readFromFile(int timestamp){
 
-  String filename = SOURCE_DIR + "/" + timestamp + ".dat";
+  String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
     //reconstructs the filename when given the proper timestamp
 
 
-    fin = SD.open(filename, FILE_READ);
+    fin = SD.open(filename.c_str(), FILE_READ);
 
     if (!fin) {
             Serial.println("Error opening file!");

@@ -7,11 +7,11 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <SD.h>
-//#include <StandardCplusplus.h>
+
 
 class SaveAudio {
 public:
-  SaveAudio(int maxBufferLength);
+  SaveAudio();
   ~SaveAudio();
 
   void writeToFile(int timestamp);
@@ -21,7 +21,10 @@ public:
 private:
   bool writeToFileBool = true;
   int bufferSize = 0;
-  Vector<double> buffer;
+  Vector<float> buffer;
+
+  //length of array as maxBufferLength
+  float storage_array[88200];
 
   File fout;
 };
