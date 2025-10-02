@@ -12,7 +12,6 @@
 
 
 // TODO - FIXME
-extern unsigned long timestamp;
 extern int fileIndex;
 extern char filenames[100]; 
 extern String SOURCE_DIR_BIN;

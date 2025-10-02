@@ -1,8 +1,6 @@
 #include "global.h"
 
-
-elapsedMillis millistimer;
-unsigned long timestamp = 0;
+elapsedMillis timestamp;
 int fileIndex = 0;
 char filenames[100]; 
 
