@@ -23,8 +23,8 @@ private:
   int bufferSize = 0;
   Vector<float> buffer;
 
-  //length of array as maxBufferLength
-  float storage_array[88200];
+  //length of array as maxBufferLength (now 10 sec)
+  float storage_array[441000];
 
   File fout;
 };

@@ -2,13 +2,17 @@
 
 elapsedMillis timestamp;
 int fileIndex = 0;
-char filenames[100]; 
+
+//Array with [filename/timestamp, fileSize]
+char fileData[100][2];
+//THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
+int fileDataSize = 100; 
 
 String SOURCE_DIR_BIN = "magicMirror/audioBinaries";
 
-void pushToArray(int value) {
-    filenames[0] = timestamp;
+void pushToArray(int timestamp, int fileSize) {
+    fileData[fileIndex][0] = timestamp;
+    fileData[fileIndex][1] = fileSize;
     fileIndex++;
-
 }
 

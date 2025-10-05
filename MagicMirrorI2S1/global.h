@@ -14,9 +14,10 @@
 // TODO - FIXME
 extern elapsedMillis timestamp;
 extern int fileIndex;
-extern char filenames[100]; 
+extern int fileDataSize;
+extern char fileData[][2]; 
 extern String SOURCE_DIR_BIN;
 
-void pushToArray(int value);
+void pushToArray(int timestamp, int fileSize);
 
 #endif

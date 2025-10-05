@@ -45,6 +45,7 @@ float peakValuePotRead;
 float peakVal;
 
 void setup() {
+
   //quick serial because i like em nice and responsive 
   Serial.begin(115200);
 

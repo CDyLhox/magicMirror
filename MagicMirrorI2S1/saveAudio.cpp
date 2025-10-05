@@ -30,16 +30,16 @@ void SaveAudio::writeToFile(int timestamp){
   }
   //check if writeToFile has been called before
   else if (writeToFileBool == true){
-    pushToArray(timestamp);
 
     writeToFileBool = false;
 
     bufferSize = buffer.size();
 
     //writes the buffer away to a binary file
-    fout.write(reinterpret_cast<char*>(&buffer[0]), buffer.size() * sizeof(double));
+    fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
     fout.close();
 
+    pushToArray(timestamp, bufferSize);
     //clear buffer after use to make ready for next use
     buffer.clear();
   }
