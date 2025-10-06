@@ -59,6 +59,7 @@ void setup() {
   folderInit = new audioFolderInit(chipSelect);
   Serial.println("i made it past audiofolder");
   audioSaver = new SaveAudio();
+  audioReader = new ReadAudio(44100);
   Serial.println("i made a saveaudi");
 
   //setup the audiomem please also the alanog read reso q
@@ -92,6 +93,8 @@ void setup() {
 
 void loop() {
 
+  playTestAudio();
+  Serial.println("we made it past the loop playtestaudio function call");
  // printMyInfo();
   if (queue1.available() > 0) { printMyAudio(); }
 
@@ -123,7 +126,6 @@ void printMyInfo() {
 
 void printMyAudio() {
   int16_t* block = queue1.readBuffer();
-
   if (block) {
     for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
       int16_t sample = block[i];
@@ -134,4 +136,9 @@ void printMyAudio() {
     queue1.freeBuffer();
   }
   
+}
+
+void playTestAudio(){
+  audioReader->readFromFile(49060);
+ Serial.println(audioReader->read()); 
 }
