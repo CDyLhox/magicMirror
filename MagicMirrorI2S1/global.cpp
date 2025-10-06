@@ -4,7 +4,7 @@ elapsedMillis timestamp;
 int fileIndex = 0;
 
 //Array with [filename/timestamp, fileSize]
-char fileData[100][2];
+int fileData[100][2];
 //THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
 int fileDataSize = 100; 
 
@@ -15,4 +15,3 @@ void pushToArray(int timestamp, int fileSize) {
     fileData[fileIndex][1] = fileSize;
     fileIndex++;
 }
-

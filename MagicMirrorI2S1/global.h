@@ -15,7 +15,7 @@
 extern elapsedMillis timestamp;
 extern int fileIndex;
 extern int fileDataSize;
-extern char fileData[][2]; 
+extern int fileData[][2]; 
 extern String SOURCE_DIR_BIN;
 
 void pushToArray(int timestamp, int fileSize);
