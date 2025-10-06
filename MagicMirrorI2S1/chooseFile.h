@@ -18,9 +18,5 @@ public:
 
 
 private:
-  //TODO - zou dit duidelijker zijn, of gewoon 0 en 1
-  // //used for array indexes
-  // int filename = 0;
-  // int fileSize = 1;
 
 };

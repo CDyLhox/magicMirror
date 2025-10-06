@@ -23,31 +23,28 @@ void SaveAudio::writeToFile(int timestamp){
     Serial.println(timestamp);
   String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
-  fout = SD.open(filename.c_str(), FILE_WRITE);
+  if (writeToFileBool == true){
 
-  if (!fout) {
-    Serial.println("Error opening file!");
+    fout = SD.open(filename.c_str(), FILE_WRITE);
+
+    if (!fout) {
+        Serial.println("Error opening file!");
+      }
+    else {
+      writeToFileBool = false;
+
+      bufferSize = buffer.size();
+
+      //writes the buffer away to a binary file
+      fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
+      fout.close();
+
+      pushToArray(int(timestamp), int(bufferSize));
+      //clear buffer after use to make ready for next use
+      buffer.clear();
+
+    }
   }
-  //check if writeToFile has been called before
-  else if (writeToFileBool == true){
-
-    writeToFileBool = false;
-
-    bufferSize = buffer.size();
-
-    //writes the buffer away to a binary file
-    fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
-    fout.close();
-
-    pushToArray(timestamp, bufferSize);
-    //clear buffer after use to make ready for next use
-    buffer.clear();
-  }
-  else{
-    //already written to file
-    fout.close();
-  }
-
 }
 
 //writes the sample to buffer
