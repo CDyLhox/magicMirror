@@ -6,6 +6,7 @@
 #include "audioFolderInit.h"
 #include "global.h"
 #include "saveAudio.h" 
+#include "readAudio.h"
 
 // GUItool: begin automatically generated code
 AudioInputAnalog adc1(A2);
@@ -31,10 +32,11 @@ AudioConnection PatchCord6(envelope1, 0, queue1, 0);
 
 //Audioplayer initialisation
 const int chipSelect = 10;
-audioPlayer* player;
+audioFolderInit* folderInit;
 
-//AudioSaver initilisaion
+//AudioSaverReaderinitilisaion
 SaveAudio* audioSaver;
+ReadAudio* audioReader; 
 
 
 int gainPotPin = 21;
@@ -54,8 +56,10 @@ void setup() {
     ;
   }
   
-  player = new audioPlayer(chipSelect);
+  folderInit = new audioFolderInit(chipSelect);
+  Serial.println("i made it past audiofolder");
   audioSaver = new SaveAudio();
+  Serial.println("i made a saveaudi");
 
   //setup the audiomem please also the alanog read reso q
   AudioMemory(240);

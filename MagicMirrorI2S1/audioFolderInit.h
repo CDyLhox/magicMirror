@@ -6,15 +6,15 @@
 
 #include "global.h"
 
-class audioPlayer {
+class audioFolderInit{
 private:
   void createFolder();
   void freeAudioBinaryFolder();
 public:
   int amountOfFiles;
   int cs;
-  audioPlayer(int chipSelect);
-  ~audioPlayer();
+  audioFolderInit(int chipSelect);
+  ~audioFolderInit();
 };
 
 #endif
