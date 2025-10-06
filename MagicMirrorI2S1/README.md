@@ -1,34 +1,6 @@
-//
-// Created by cashu on 13/09/2025.
-//
-#include "readAudio.h"
+Haai cas, de issue die we nu ervaren is dat de combinatie van audioReader->readFromFile(49060 + Serial.println(audioReader->read())); op lijn 142van de magicMirrorI2S1.ino
 
-//For Dylan:
-//HOW TO USE -
-// 1. call 'readFromFile' with the timestamp of the file you want to read
-//    --> now there is a buffer with the data from the binary file
-// 2. use 'read' to get the values out of the buffer
-
-ReadAudio::ReadAudio(int bufferSize){
-       Serial.println("ReadAudio - constructor");
-
-    this->bufferSize = bufferSize;
-
-    //Allocating buffer
-    int16_t* buffer;
-buffer = new int16_t[bufferSize];
-    
-    //LEMme try it this way cause teensy likes int16_t audio
-    //buffer = new double[bufferSize];
-    for (int i = 0; i < bufferSize; i++) {
-        buffer[i] = 0;
-    }
-}
-
-ReadAudio::~ReadAudio(){
-    Serial.println("ReadAudio - destructor");
-    deleteBuffer();
-}
+Ik den k dat het komt door het feit dat je doubles gebruikte voor de buffer, ik heb die veranderd naar int16_t block ints voor de teensy want die wilt dat graag
 
 void ReadAudio::readFromFile(int timestamp){
   String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
@@ -63,7 +35,6 @@ double ReadAudio::read(){
 
     return output;
 }
-
 
 void ReadAudio::deleteBuffer(){
     delete [] buffer;

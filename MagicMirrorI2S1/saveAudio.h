@@ -24,7 +24,7 @@ private:
   Vector<float> buffer;
 
   //length of array as maxBufferLength (now 10 sec)
-  float storage_array[44100*2];
+  float storage_array[44100];
 
   File fout;
 };
