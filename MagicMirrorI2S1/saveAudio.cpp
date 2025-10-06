@@ -39,7 +39,7 @@ void SaveAudio::writeToFile(int timestamp){
       fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
       fout.close();
 
-      pushToArray(int(timestamp), int(bufferSize));
+      pushToArray(unsigned long(timestamp), int(bufferSize));
       //clear buffer after use to make ready for next use
       buffer.clear();
 

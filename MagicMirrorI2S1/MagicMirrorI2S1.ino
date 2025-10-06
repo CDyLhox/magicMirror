@@ -133,5 +133,4 @@ void printMyAudio() {
     }
     queue1.freeBuffer();
   }
-  
 }
