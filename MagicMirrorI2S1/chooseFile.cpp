@@ -54,6 +54,7 @@ int ChooseFile::returnNextFile(int prevFile){
     return fileData[indexNextFile][0];
 }
 
+//DIT IS ALTIJD DEZELFDE FILE
 int ChooseFile::returnOldestFile(){
     return fileData[0][0];
 }
