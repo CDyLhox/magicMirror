@@ -7,6 +7,7 @@
 #include "global.h"
 #include "saveAudio.h" 
 #include "readAudio.h"
+#include "randomWavPlayer.h"
 
 // GUItool: begin automatically generated code
 AudioInputAnalog adc1(A2);
@@ -26,6 +27,12 @@ AudioConnection Patchcord5(delay1, envelope1);
 AudioConnection patchCord3(envelope1, 0, i2s1, 0);
 AudioConnection patchCord4(envelope1, 0, i2s1, 1);
 AudioConnection PatchCord6(envelope1, 0, queue1, 0);
+
+// WAV player setup
+AudioPlaySdWav playWav1;
+AudioConnection patchCordWavL(playWav1, 0, i2s1, 0);
+AudioConnection patchCordWavR(playWav1, 1, i2s1, 1);
+randomWavPlayer wavPlayer(playWav1, "/tempAudioFolderDirectory"); 
 
 
 
@@ -77,6 +84,13 @@ void setup() {
   sgtl5000_1.enable();
   sgtl5000_1.volume(20);
 
+  if (!SD.begin(BUILTIN_SDCARD)) {
+    Serial.println("SD init failed!");
+    while (1);
+  }
+
+wavPlayer.begin();
+
   delay1.delay(0, 300);
 
   //Envelope functions
@@ -88,6 +102,9 @@ void setup() {
 
   // start the que to record the incoming mic values
   queue1.begin();
+
+  wavPlayer.playRandom();
+  Serial.println("Test: playing random wav file at startup");
 }
 
 
@@ -111,7 +128,12 @@ void loop() {
       envelope1.noteOn();
       delay(300);
       envelope1.noteOff();
-    }
+
+      // trigger random playback if not already playing
+      if (!wavPlayer.isPlaying()) {
+        wavPlayer.playRandom();
+        Serial.println("Triggered random WAV playback");
+      }
   }
 }
 
