@@ -54,7 +54,6 @@ int ChooseFile::returnNextFile(int prevFile){
     return fileData[indexNextFile][0];
 }
 
-//FIXME - DIT IS ALTIJD DEZELFDE FILE (wordt niet uit array verwijderd)
 int ChooseFile::returnOldestFile(){
     return fileData[0][0];
 }

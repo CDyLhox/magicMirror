@@ -21,11 +21,10 @@ public:
 private:
   bool writeToFileBool = true;
   int bufferSize = 0;
-  Vector<double> buffer;
+  Vector<float> buffer;
 
-  //length of array as maxBufferLength
-  //THIS MIGHT BE TOO MUCH --> USE 2 BUFFERS BUCKET BRIGADE!!!!!! steeds kleine buffers wegschrijven
-  double storage_array[44100];
+  //length of array as maxBufferLength (now 10 sec)
+  float storage_array[44100];
 
   File fout;
 };

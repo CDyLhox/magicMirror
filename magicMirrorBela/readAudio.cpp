@@ -38,13 +38,9 @@ void ReadAudio::readFromFile(int timestamp)
 {
     String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
-<<<<<<< HEAD
-    //reconstructs the filename when given the proper timestamp
-=======
     // reconstructs the filename when given the proper timestamp
 
     // FIXME: deze is broken, na een tijdje schrijft hij alleen nog lege timestamps weg
->>>>>>> e7b6eb73342542108d1199f9c815ae5bc641fda7
     fin = SD.open(filename.c_str(), FILE_READ);
 
     if (!fin) {

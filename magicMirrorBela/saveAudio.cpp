@@ -39,7 +39,7 @@ void SaveAudio::writeToFile(int timestamp){
       fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
       fout.close();
 
-      pushToArray(unsigned long(timestamp), int(bufferSize));
+      pushToArray(int(timestamp), int(bufferSize));
       //clear buffer after use to make ready for next use
       buffer.clear();
 
@@ -50,6 +50,7 @@ void SaveAudio::writeToFile(int timestamp){
 //writes the sample to buffer
 void SaveAudio::write(double sample){
   buffer.push_back(sample);
+
   //if this happens, you dont want the intended writeToFile call to work --> writeToFileBool to check
   if(buffer.size() == buffer.max_size()){
     writeToFile(timestamp);
