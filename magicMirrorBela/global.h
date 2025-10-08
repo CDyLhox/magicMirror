@@ -16,6 +16,12 @@ extern int fileDataSize;
 extern int fileData[][2]; 
 extern std::string SOURCE_DIR_BIN;
 
+extern float peakValuePotRead;
+extern float peakVal;
+extern float gainPotRead;
+
+extern const int chipSelect;
+
 void pushToArray(unsigned long timestamp, int fileSize);
 
 void printAnalogData();

@@ -3,6 +3,9 @@
 time(&timestamp);
 int fileIndex = 0;
 
+ const int chipSelect = 10;
+float peakValuePotRead;
+float peakVal;
 // Array with [filename/timestamp, fileSize]
 int fileData[100][2];
 // THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
