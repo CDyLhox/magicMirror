@@ -45,3 +45,5 @@ void ReadAudio::deleteBuffer(){
 /hansa plast watervaste witte tape soortvan bij de kruidvat
 
 audio library als doubles of als floates? 
+
+
