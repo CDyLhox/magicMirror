@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 /*
  ____  _____ _        _
@@ -112,9 +113,7 @@ bool setup(BelaContext *context, void *userData)
 	return true;
 }
 
-// render() is called regularly at the highest priority by the audio engine.
-// Input and output are given from the audio hardware and the other
-// ADCs and DACs (if available).
+
 void render(BelaContext *context, void *userData)
 {
 
@@ -122,6 +121,7 @@ void render(BelaContext *context, void *userData)
 
 // cleanup() is called once at the end, after the audio has stopped.
 // Release any resources that were allocated in setup().
+
 void cleanup(BelaContext *context, void *userData)
 {
 

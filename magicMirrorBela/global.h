@@ -2,21 +2,19 @@
 // Created by cashu on 10/09/2025.
 //
 
-#ifndef _GLOBAL_H_
-#define _GLOBAL_H_
-#include <SPI.h>
+
+#pragma once
 #include <Streaming.h>
 #include <String>
 #include <Vector.h>
+#include <string>
+#include <ctime>
 
-
-// TODO - FIXME
-extern elapsedMillis timestamp;
+time_t timestamp;
 extern int fileIndex;
 extern int fileDataSize;
 extern int fileData[][2]; 
-extern String SOURCE_DIR_BIN;
+extern std::string SOURCE_DIR_BIN;
 
 void pushToArray(unsigned long timestamp, int fileSize);
 
-#endif

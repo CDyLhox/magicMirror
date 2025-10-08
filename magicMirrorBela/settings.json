@@ -1,5 +1,5 @@
-
-  "fileName": "render.cpp",
+{
+  "fileName": "audioFolderInit.cpp",
   "CLArgs": {
     "-p": "16",
     "-C": "8",
@@ -31,3 +31,4 @@
     "-Z": "",
     "--disable-led": "0"
   }
+}
