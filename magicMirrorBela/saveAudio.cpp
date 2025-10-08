@@ -2,33 +2,30 @@
 // Created by cashu on 10/09/2025.
 //
 #include "saveAudio.h"
-#include <Arduino.h>
-#include <SD.h>
 #include <string>
-
+#include <iostream>
 
 SaveAudio::SaveAudio(){
-  Serial.println("SaveAudio - constructor");
-
-  buffer.setStorage(storage_array); 
+	std::cout << "SaveAudio - constructor" << std::endl;
 }
 
 SaveAudio::~SaveAudio(){
-  Serial.println("SaveAudio - destructor");
+	std::cout << "SaveAudio - destructor" << std::endl;
 }
 
 //this is called to write the buffer away after it's full
 void SaveAudio::writeToFile(int timestamp){
-    Serial.print("SaveAudio::writeToFile() ");
-    Serial.println(timestamp);
-  String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
+    std::cout << "SaveAudio::writeToFile() " << std::endl;
+    std::cout << timestamp << std::endl;
+    
+	std::string filename = SOURCE_DIR_BIN + "/" + std::to_string(timestamp) + ".dat";
 
   if (writeToFileBool == true){
 
-    fout = SD.open(filename.c_str(), FILE_WRITE);
+    fout.open(filename, std::ios::out | std::ios::binary);
 
     if (!fout) {
-        Serial.println("Error opening file!");
+        std::cout << "Error opening file!" << std::endl;
       }
     else {
       writeToFileBool = false;
@@ -50,7 +47,6 @@ void SaveAudio::writeToFile(int timestamp){
 //writes the sample to buffer
 void SaveAudio::write(double sample){
   buffer.push_back(sample);
-
   //if this happens, you dont want the intended writeToFile call to work --> writeToFileBool to check
   if(buffer.size() == buffer.max_size()){
     writeToFile(timestamp);

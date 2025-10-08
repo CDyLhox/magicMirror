@@ -4,9 +4,8 @@
 
 #pragma once
 #include "global.h"
-#include <Arduino.h>
-#include <SPI.h>
-#include <SD.h>
+#include <fstream>
+#include <vector>
 
 
 class SaveAudio {
@@ -21,10 +20,7 @@ public:
 private:
   bool writeToFileBool = true;
   int bufferSize = 0;
-  Vector<float> buffer;
+  std::vector<double> buffer;
 
-  //length of array as maxBufferLength (now 10 sec)
-  float storage_array[44100];
-
-  File fout;
+  std::fstream fout;
 };

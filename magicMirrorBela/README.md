@@ -6,8 +6,6 @@ void ReadAudio::readFromFile(int timestamp){
   String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
     //reconstructs the filename when given the proper timestamp
-
-    //FIXME: deze is broken, na een tijdje schrijft hij alleen nog lege timestamps weg
     fin = SD.open(filename.c_str(), FILE_READ);
 
     if (!fin) {
@@ -42,6 +40,13 @@ void ReadAudio::deleteBuffer(){
 }
 
 
-/hansa plast watervaste witte tape soortvan bij de kruidvat
 
-audio library als doubles of als floates? 
+CAS AANTEKLENINGEN:
+  //if this happens, you dont want the intended writeToFile call to work --> writeToFileBool to check
+  if(buffer.size() == buffer.max_size()){
+    writeToFile(timestamp);
+  } --> dit houden maar omschrijven want dit is niet meer hoe vector werkt (saveFile.cpp)
+
+Willen we in_16t nog gebruiken?
+
+

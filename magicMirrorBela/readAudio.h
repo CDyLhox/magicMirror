@@ -20,11 +20,10 @@ public:
 
 private:
 
-    //TODO: make int16_t
   double *buffer = nullptr;
   int bufferSize = 0;
   int readHead = 0;
 
-  File fin;
+  std::fstream fin;
 };
 
