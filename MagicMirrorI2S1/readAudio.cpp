@@ -3,69 +3,74 @@
 //
 #include "readAudio.h"
 
-//For Dylan:
-//HOW TO USE -
-// 1. call 'readFromFile' with the timestamp of the file you want to read
-//    --> now there is a buffer with the data from the binary file
-// 2. use 'read' to get the values out of the buffer
+// For Dylan:
+// HOW TO USE -
+//  1. call 'readFromFile' with the timestamp of the file you want to read
+//     --> now there is a buffer with the data from the binary file
+//  2. use 'read' to get the values out of the buffer
 
-ReadAudio::ReadAudio(int bufferSize){
-       Serial.println("ReadAudio - constructor");
+ReadAudio::ReadAudio(int bufferSize)
+{
 
+    Serial.println("ReadAudio - constructorStart");
     this->bufferSize = bufferSize;
+    Serial.print("bufferSize: ");
+    Serial.println(bufferSize);
 
-    //Allocating buffer
-    int16_t* buffer;
-buffer = new int16_t[bufferSize];
-    
-    //LEMme try it this way cause teensy likes int16_t audio
-    //buffer = new double[bufferSize];
+    // Allocating buffer
+    buffer = new double[bufferSize];
+    Serial.println("halfway in readaudio");
+    // LEMme try it this way cause teensy likes int16_t audio
+    // buffer = new double[bufferSize];
     for (int i = 0; i < bufferSize; i++) {
         buffer[i] = 0;
     }
+    Serial.println("ReadAudio - constructorEnd");
 }
 
-ReadAudio::~ReadAudio(){
+ReadAudio::~ReadAudio()
+{
     Serial.println("ReadAudio - destructor");
     deleteBuffer();
 }
 
-void ReadAudio::readFromFile(int timestamp){
-  String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
+void ReadAudio::readFromFile(int timestamp)
+{
+    String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
-    //reconstructs the filename when given the proper timestamp
+    // reconstructs the filename when given the proper timestamp
 
-    //FIXME: deze is broken, na een tijdje schrijft hij alleen nog lege timestamps weg
+    // FIXME: deze is broken, na een tijdje schrijft hij alleen nog lege timestamps weg
     fin = SD.open(filename.c_str(), FILE_READ);
 
     if (!fin) {
-            Serial.println("ReadAudio::readFromFile. Error opening file!");
-    }
-    else {
+        Serial.println("ReadAudio::readFromFile. Error opening file!");
+    } else {
 
-        Serial.println("ReadAudio::readFromFile, fileread succes 👍");
-        //writes the binary file to the array 'buffer'
+        // writes the binary file to the array 'buffer'
         fin.read(reinterpret_cast<char*>(buffer), bufferSize * sizeof(double));
+        Serial.println("ReadAudio::readFromFile, fileread succes 👍2");
         fin.close();
 
-        //clearing everything for next use
+        // clearing everything for next use
         readHead = 0;
         deleteBuffer();
     }
 }
 
-//you can call this after calling readFromFile to read from array 'buffer'
-double ReadAudio::read(){
+// you can call this after calling readFromFile to read from array 'buffer'
+double ReadAudio::read()
+{
     Serial.println("readAudio::Read()");
-    //Again, added int16t for the audio of teensy
+    // Again, added int16t for the audio of teensy
     int16_t output = buffer[readHead];
     readHead++;
 
     return output;
 }
 
-
-void ReadAudio::deleteBuffer(){
-    delete [] buffer;
+void ReadAudio::deleteBuffer()
+{
+    delete[] buffer;
     buffer = nullptr;
 }

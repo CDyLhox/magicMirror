@@ -59,7 +59,7 @@ void setup() {
   folderInit = new audioFolderInit(chipSelect);
   Serial.println("i made it past audiofolder");
   audioSaver = new SaveAudio();
-  audioReader = new ReadAudio(44100);
+  audioReader = new ReadAudio(44100/2);
   Serial.println("i made a saveaudi");
 
   //setup the audiomem please also the alanog read reso q
@@ -88,13 +88,12 @@ void setup() {
 
   // start the que to record the incoming mic values
   queue1.begin();
+  playTestAudio();
 }
 
 
 void loop() {
 
-  playTestAudio();
-  Serial.println("we made it past the loop playtestaudio function call");
  // printMyInfo();
   if (queue1.available() > 0) { printMyAudio(); }
 
@@ -140,5 +139,6 @@ void printMyAudio() {
 
 void playTestAudio(){
   audioReader->readFromFile(49060);
- Serial.println(audioReader->read()); 
+ //Serial.println(audioReader->read()); 
+ Serial.println("hallo we zijn er voorbij"); 
 }
