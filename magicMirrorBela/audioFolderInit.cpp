@@ -1,18 +1,17 @@
 #include "audioFolderInit.h"
-#include <Arduino.h>
-#include <SD.h>
+#include <fstream>
+#include <cassert>
+#include <cstdlib>
+#include <filesystem>
 
 audioFolderInit::audioFolderInit(int chipSelect)
 {
-    Serial.println("audioplayer::audioplayer - constructor");
-    Serial.print("Initializing SD card...");
+    std::cout<<"audioplayer::audioplayer - constructor"<<std::endl;
+    std::cout<<"Initializing SD card..." << std::endl;
 
     cs = chipSelect;
-    if (!SD.begin(cs)) {
-        Serial.println("initialization failed!");
-        return;
-    }
-    Serial.println("initialization done.");
+       // std::cout<<"INITIALISATION FAILED IN AUDIOFOLDER CONSTRUCTIO" <<std::endl;
+        //return;
 
     // Make sure all folders exist
     createFolder();
@@ -20,38 +19,41 @@ audioFolderInit::audioFolderInit(int chipSelect)
 
 audioFolderInit::~audioFolderInit()
 {
-    Serial.println("audioplayer destructor");
+    std::cout << "folderinit Destructor "<< std::endl;
     freeAudioBinaryFolder();
 }
 
 void audioFolderInit::createFolder()
 {
-    Serial.println("audioPlayer::createFolder()");
+    std::cout << "audioPlayer::createFolder() top" <<std::endl;
+
+    
+
 
     // Samples folder
-    if (SD.exists("magicMirror/samples")) {
-        Serial.println("magicMirror/samples folder already exists");
+    if (std::filesystem::exists("/projects/magicMirror/files/samples")) {
+        std::cout << "magicMirror/samples folder already exists" << std::endl;
     } else {
-        if (SD.mkdir("magicMirror/samples")) {
-            Serial.println("Created magicMirror/samples directory");
+        if (std::filesystem::create_directory("/projects/magicMirror/files/samples")) {
+            std::cout << "created magicMirror/files/samples directory" << std::endl;
         } else {
-            Serial.println("Failed to create magicMirror/samples directory");
+            std::cout << "Failed to create magicmirror/files/samples directory" << std::endl;
         }
     }
     // audio binaries folder
-    if (SD.exists("magicMirror/audioBinaries")) {
-        Serial.println("binaries folder exists");
+    if (std::filesystem::exists("/projects/magicMirror/files/audioBinaries")) {
+        std::cout<<"binaries folder exists" << std::endl;
     } else {
-        if (SD.mkdir("magicMirror/audioBinaries")) {
-            Serial.println("created magicMirror/audioBinaries");
+        if (std::filesystem::create_directory("/projects/magicMirror/files/audioBinaries")) {
+            std::cout << "created magicmirror/audiobinaries" << std::endl;
         } else {
-            Serial.println("Failed to create magicmirror/audioBinaries directory");
+            std::cout << "Failed to crreate magicmirror/audioBinaries Directory" << std::endl;
         }
     }
 }
 
 void audioFolderInit::freeAudioBinaryFolder()
 {
-    SD.rmdir("magicMirror/audioBinaries");
-    Serial.println("removing magicMirror/audioBinaries");
+    std::filesystem::remove("/projects/magicMirror/files/audioBinaries");
+    std::cout<<"removing /projects/magicMirror/files/audioBinaries" << std::endl;
 }

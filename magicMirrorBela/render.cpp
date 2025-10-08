@@ -1,3 +1,4 @@
+
 /*
  ____  _____ _        _
 | __ )| ____| |      / \
@@ -65,9 +66,35 @@ your input is mono - if it's not you will have to account for multiple channels)
 Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers).
 */
 
+#include <sndfile.h>      // for reading audio files
+#include <filesystem>     // for scanning folders
+#include <vector>         // dynamic arrays for samples
+#include <string>         // standard strings
+#include <iostream>       // logging / debugging
+#include <cmath>          // math for trim + normalize
+#include <random>         // random file selection
 #include <Bela.h>
 
 
+#include "audioFolderInit.h"
+#include "global.h"
+#include "saveAudio.h" 
+#include "readAudio.h"
+
+//Audioplayer initialisation
+const int chipSelect = 10;
+audioFolderInit* folderInit;
+
+//AudioSaverReaderinitilisaion
+SaveAudio* audioSaver;
+ReadAudio* audioReader; 
+
+int gainPotPin = 21;
+float gainPotRead = 1;
+int ledPin = 23;
+int peakValuePot = 20;
+float peakValuePotRead;
+float peakVal;
 // setup() is called once before the audio rendering starts.
 // Use it to perform any initialisation and allocation which is dependent
 // on the period size or sample rate.
@@ -75,6 +102,13 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 // Return true on success; returning false halts the program.
 bool setup(BelaContext *context, void *userData)
 {
+    folderInit = new audioFolderInit(chipSelect);
+    audioSaver = new SaveAudio();
+    audioReader = new ReadAudio(44100/2);
+
+    pinMode(ledPin, OUTPUT);
+  digitalWrite(ledPin, HIGH);
+
 	return true;
 }
 

@@ -2,7 +2,6 @@
 #define _AUDIOFOLDERINIT_H_
 
 #include <iostream>
-#include <SD.h>
 
 #include "global.h"
 

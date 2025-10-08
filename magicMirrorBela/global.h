@@ -4,7 +4,6 @@
 
 #ifndef _GLOBAL_H_
 #define _GLOBAL_H_
-#include <SD.h>
 #include <SPI.h>
 #include <Streaming.h>
 #include <String>
