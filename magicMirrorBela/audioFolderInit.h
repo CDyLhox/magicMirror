@@ -22,7 +22,7 @@ public:
     inline bool dirExists(std::string path)
     {
         struct stat info;
-        return stat(path.c_str(), &info) == 0 && (info.st_mode & S_ISDIR);
+        return stat(path.c_str(), &info) == 0 && S_ISDIR((info.st_mode));
     }
     inline bool createDir(std::string path)
     {

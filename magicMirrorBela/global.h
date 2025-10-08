@@ -9,8 +9,10 @@
 #include <string>
 #include <ctime>
 #include <algorithm>
+#include <iostream>
+#include <ctime>
 
-time_t timestamp;
+extern time_t timestamp;
 extern int fileIndex;
 extern int fileDataSize;
 extern int fileData[][2]; 

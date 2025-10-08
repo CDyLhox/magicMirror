@@ -54,7 +54,7 @@ void ReadAudio::readFromFile(int timestamp){
 
 //you can call this after calling readFromFile to read from array 'buffer'
 double ReadAudio::read(){
-    Serial.println("readAudio::Read()");
+    std::cout << "readAudio::read()" << std::endl;
     //Again, added int16t for the audio of teensy
     int16_t output = buffer[readHead];
     readHead++;

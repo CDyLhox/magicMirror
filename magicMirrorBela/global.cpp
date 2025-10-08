@@ -1,6 +1,6 @@
 #include "global.h"
 
-time(&timestamp);
+time_t timestamp;
 int fileIndex = 0;
 
 const int chipSelect = 10;
@@ -11,7 +11,7 @@ int fileData[100][2];
 // THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
 int fileDataSize = 100;
 
-std::String SOURCE_DIR_BIN = "magicMirror/audioBinaries";
+std::string SOURCE_DIR_BIN = "magicMirror/audioBinaries";
 
 void pushToArray(unsigned long timestamp, int fileSize)
 {

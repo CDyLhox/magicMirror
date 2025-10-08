@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 /*
  ____  _____ _        _
@@ -68,7 +67,6 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 */
 
 #include <sndfile.h>      // for reading audio files
-#include <filesystem>     // for scanning folders
 #include <vector>         // dynamic arrays for samples
 #include <string>         // standard strings
 #include <iostream>       // logging / debugging
@@ -103,8 +101,8 @@ bool setup(BelaContext *context, void *userData)
     audioSaver = new SaveAudio();
     audioReader = new ReadAudio(44100/2);
 
-    pinMode(ledPin, OUTPUT);
-  digitalWrite(ledPin, HIGH);
+   // pinMode(ledPin, OUTPUT);
+  //digitalWrite(ledPin, HIGH);
 
 	return true;
 }
