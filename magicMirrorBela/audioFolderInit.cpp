@@ -1,8 +1,4 @@
 #include "audioFolderInit.h"
-#include <fstream>
-#include <cassert>
-#include <cstdlib>
-#include <filesystem>
 
 audioFolderInit::audioFolderInit(int chipSelect)
 {
@@ -16,6 +12,7 @@ audioFolderInit::audioFolderInit(int chipSelect)
     // Make sure all folders exist
     createFolder();
 }
+
 
 audioFolderInit::~audioFolderInit()
 {
@@ -31,20 +28,20 @@ void audioFolderInit::createFolder()
 
 
     // Samples folder
-    if (std::filesystem::exists("/projects/magicMirror/files/samples")) {
+    if (dirExists("/projects/magicMirror/files/samples")) {
         std::cout << "magicMirror/samples folder already exists" << std::endl;
     } else {
-        if (std::filesystem::create_directory("/projects/magicMirror/files/samples")) {
+        if (createDir("/projects/magicMirror/files/samples")) {
             std::cout << "created magicMirror/files/samples directory" << std::endl;
         } else {
             std::cout << "Failed to create magicmirror/files/samples directory" << std::endl;
         }
     }
     // audio binaries folder
-    if (std::filesystem::exists("/projects/magicMirror/files/audioBinaries")) {
+    if (dirExists("/projects/magicMirror/files/audioBinaries")) {
         std::cout<<"binaries folder exists" << std::endl;
     } else {
-        if (std::filesystem::create_directory("/projects/magicMirror/files/audioBinaries")) {
+        if (createDir("/projects/magicMirror/files/audioBinaries")) {
             std::cout << "created magicmirror/audiobinaries" << std::endl;
         } else {
             std::cout << "Failed to crreate magicmirror/audioBinaries Directory" << std::endl;
@@ -54,6 +51,6 @@ void audioFolderInit::createFolder()
 
 void audioFolderInit::freeAudioBinaryFolder()
 {
-    std::filesystem::remove("/projects/magicMirror/files/audioBinaries");
+    removeDir("/projects/magicMirror/files/audioBinaries");
     std::cout<<"removing /projects/magicMirror/files/audioBinaries" << std::endl;
 }

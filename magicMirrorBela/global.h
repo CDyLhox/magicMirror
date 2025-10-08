@@ -4,11 +4,11 @@
 
 
 #pragma once
-#include <Streaming.h>
-#include <String>
-#include <Vector.h>
+//#include <Streaming.h>
+//#include <Vector.h>
 #include <string>
 #include <ctime>
+#include <algorithm>
 
 time_t timestamp;
 extern int fileIndex;
