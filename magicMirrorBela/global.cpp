@@ -3,7 +3,7 @@
 time(&timestamp);
 int fileIndex = 0;
 
- const int chipSelect = 10;
+const int chipSelect = 10;
 float peakValuePotRead;
 float peakVal;
 // Array with [filename/timestamp, fileSize]

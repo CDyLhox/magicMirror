@@ -83,7 +83,6 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include "readAudio.h"
 
 //Audioplayer initialisation
-const int chipSelect = 10;
 audioFolderInit* folderInit;
 
 //AudioSaverReaderinitilisaion
@@ -91,11 +90,8 @@ SaveAudio* audioSaver;
 ReadAudio* audioReader; 
 
 int gainPotPin = 21;
-float gainPotRead = 1;
 int ledPin = 23;
 int peakValuePot = 20;
-float peakValuePotRead;
-float peakVal;
 // setup() is called once before the audio rendering starts.
 // Use it to perform any initialisation and allocation which is dependent
 // on the period size or sample rate.
@@ -116,7 +112,23 @@ bool setup(BelaContext *context, void *userData)
 
 void render(BelaContext *context, void *userData)
 {
+    for(unsigned int n = 0; n < context->audioFrames; n++) {
 
+        float out_l = 0;
+        float out_r = 0;
+
+        // Read audio inputs
+        out_l = audioRead(context,n,0);
+        out_r = audioRead(context,n,1);
+
+        //TODO: add fx here 
+
+        audioSaver->write(out_l);
+
+        // Write the sample into the output buffer -- done!
+        audioWrite(context, n, 0, out_l);
+        audioWrite(context, n, 1, out_r);
+    }
 }
 
 // cleanup() is called once at the end, after the audio has stopped.
@@ -124,5 +136,7 @@ void render(BelaContext *context, void *userData)
 
 void cleanup(BelaContext *context, void *userData)
 {
-
+    delete folderInit;
+    delete audioSaver;
+    delete audioReader;
 }
