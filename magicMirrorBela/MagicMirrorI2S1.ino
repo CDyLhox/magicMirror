@@ -98,8 +98,8 @@ void loop() {
  // printMyInfo();
   if (queue1.available() > 0) { printMyAudio(); }
 
-  gainPotRead = analogRead(gainPotPin);
 
+  gainPotRead = analogRead(gainPotPin);
   peakValuePotRead = analogRead(peakValuePot);
   amp1.gain(gainPotRead / 2000);  // Resolution of 0 to 4 instead of 0 to 4048
 
