@@ -8,17 +8,25 @@ int fileData[100][2];
 // THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
 int fileDataSize = 100;
 
-String SOURCE_DIR_BIN = "magicMirror/audioBinaries";
+std::String SOURCE_DIR_BIN = "magicMirror/audioBinaries";
 
 void pushToArray(unsigned long timestamp, int fileSize)
 {
     if (fileIndex < 100) {
-        Serial.println("globals pushtoarray");
+        std::cout << "globals pushtoarray" << std::endl;
         fileData[fileIndex][0] = timestamp;
         fileData[fileIndex][1] = fileSize;
         fileIndex++;
     } else {
-        Serial.println("global::pushToArray overflow error");
+        std::cout << "globals::pushtoarray overflow error" << std::endl;
     };
 }
 
+void printAnalogData()
+{
+    std::cout
+        << "peakValuePotRead / 2000:     " << peakValuePotRead / 2000 << "\n"
+        << "gainPotRead/2000:            " << gainPotRead / 2000 << "\n"
+        << "peakValue:                   " << peakVal
+        << std::endl;
+}

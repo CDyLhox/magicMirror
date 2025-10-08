@@ -18,3 +18,5 @@ extern std::string SOURCE_DIR_BIN;
 
 void pushToArray(unsigned long timestamp, int fileSize);
 
+void printAnalogData();
+
