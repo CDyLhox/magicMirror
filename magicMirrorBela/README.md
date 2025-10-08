@@ -10,5 +10,9 @@ CAS AANTEKLENINGEN:
   } --> dit houden maar omschrijven want dit is niet meer hoe vector werkt (saveFile.cpp)
 
 Willen we in_16t nog gebruiken?
+NEE!!!!!
+
+## Voor cas:
+ik heb in globals.h net je timer veranderd, krijg nu geen error meer maar snap ook niet wat ik heb gedaan dus die moet je even checken
 
 

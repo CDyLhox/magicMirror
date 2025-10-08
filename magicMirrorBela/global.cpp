@@ -28,8 +28,8 @@ void pushToArray(unsigned long timestamp, int fileSize)
 void printAnalogData()
 {
     std::cout
-        << "peakValuePotRead / 2000:     " << peakValuePotRead / 2000 << "\n"
-        << "gainPotRead/2000:            " << gainPotRead / 2000 << "\n"
-        << "peakValue:                   " << peakVal
+        << "peakValuePotRead / 2000:     " << "peakValuePotRead / 2000" << "\n"
+        << "gainPotRead/2000:            " << "gainPotRead / 2000" << "\n"
+        << "peakValue:                   " << "peakVal"
         << std::endl;
 }
