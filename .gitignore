@@ -23,6 +23,7 @@
 */example
 *.webm
 *.webp
+*.DS_Store
 
 .vscode/
 .venv/
@@ -40,7 +41,7 @@ csd2b/ciskadingen/
 aantekeningen/
 csd2a/python_basics/audio_cat/
 
-DS_Store
+*.DS_Store
 #cmake
 *cmake-build-dir*
 # cmakelists.txt
