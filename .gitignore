@@ -1,8 +1,6 @@
 #files
 
 *.midi
-*.wav
-*.WAV
 *.out
 *.o
 *.s

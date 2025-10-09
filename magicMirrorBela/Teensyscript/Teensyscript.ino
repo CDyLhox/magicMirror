@@ -1,4 +1,12 @@
 /* Mono Peak Meter
+float readAveraged(byte pin, int samples=16) {
+  unsigned long sum = 0;
+  for (int i=0; i<samples; ++i) {
+    sum += analogRead(pin);
+    // small delay can help for very noisy sources: delayMicroseconds(50);
+  }
+  return (float)sum / samples / 1023.0; // normalized 0.0 - 1.0
+}
 
    Scrolling peak audio level meter in the Arduino Serial Monitor
    adjusted for a mems microphone
@@ -23,14 +31,18 @@ AudioConnection          patchCord1(adc1, 0, peak1, 0);
 
 AudioConnection          patchCord3(adc1,0,amp1,0);
 AudioConnection           patchCord2(amp1, 0, audioShield, 0);
+AudioConnection           patchCord4(amp1, 0, audioShield, 1);
 
   // GUItool: end automatically generated code
+
+int gainPin = A7;
+
 
   void setup() {
     AudioMemory(4);
     Serial.begin(9600);
     //while(!Serial){;}
-  amp1.gain(0.99);
+  amp1.gain(0.50);
   sgtl5000_1.enable();
   sgtl5000_1.volume(1);
   }
@@ -39,7 +51,20 @@ AudioConnection           patchCord2(amp1, 0, audioShield, 0);
 
 elapsedMillis fps;
 
+float readAveraged(byte pin, int samples=200) {
+  unsigned long sum = 0;
+  for (int i=0; i<samples; ++i) {
+    sum += analogRead(pin);
+  }
+  return (float)sum / samples / 1024.0; 
+}
+
 void loop() {
+
+
+//  float gainread  = readAveraged(gainPin);
+//  amp1.gain(gainread);
+//  Serial.println(analogRead(A7));
   if (fps > 24) {
     if (peak1.available()) {
       fps = 0;
@@ -53,3 +78,4 @@ void loop() {
     }
   }
 }
+
