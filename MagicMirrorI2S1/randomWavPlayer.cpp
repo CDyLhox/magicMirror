@@ -1,69 +1,66 @@
 #include "randomWavPlayer.h"
-#include <Audio.h>
-#include <SD.h>
+#include <sndfile.h>
+#include <cmath>
+#include <random>
+#include <iostream>
 
-randomWavPlayer::randomWavPlayer(AudioPlaySdWav &audioPlayer, const char *folder)
-    : audioPlayer(audioPlayer), folderPath(folder) {}
+randomWavPlayer::randomWavPlayer(const std::vector<std::string>& files)
+    : wavFiles(files) {}
 
 void randomWavPlayer::begin() {
-    // first scan to load up wav files
-    rescan();
-}
-
-void randomWavPlayer::rescan() {
-    wavFiles.clear();
-
-    File dir = SD.open(folderPath);
-    if (!dir) {
-        Serial.printf("couldn't open folder: %s\n", folderPath);
-        return;
-    }
-
-    // walk through folder, grab any .wav files
-    File entry;
-    while ((entry = dir.openNextFile())) {
-        if (!entry.isDirectory()) {
-            String name = entry.name();
-            if (name.endsWith(".wav") || name.endsWith(".WAV")) {
-                String fullPath = String(folderPath);
-                if (!fullPath.endsWith("/")) fullPath += "/";
-                fullPath += name;
-
-                wavFiles.push_back(fullPath);
-                Serial.printf("found %s\n", fullPath.c_str());
-            }
-        }
-        entry.close();
-    }
-
-    dir.close();
-
-    if (wavFiles.empty()) {
-        Serial.println("no .wav files found");
+    if(wavFiles.empty()) {
+        std::cout << "No wav files provided!" << std::endl;
     } else {
-        Serial.printf("%d wav files loaded from %s\n", wavFiles.size(), folderPath);
+        std::cout << wavFiles.size() << " wav files ready." << std::endl;
     }
 }
 
-String randomWavPlayer::pickRandomFile() {
-    if (wavFiles.empty()) return "";
-    int index = random(wavFiles.size());
-    return wavFiles[index];
+std::string randomWavPlayer::pickRandomFile() {
+    if(wavFiles.empty()) return "";
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> dist(0, wavFiles.size() - 1);
+    return wavFiles[dist(gen)];
 }
 
 void randomWavPlayer::playRandom() {
-    if (wavFiles.empty()) {
-        Serial.println("nothing to play");
+    if(wavFiles.empty()) {
+        std::cout << "nothing to play" << std::endl;
         return;
     }
 
-    String file = pickRandomFile();
-    Serial.printf("playing %s\n", file.c_str());
+    std::string file = pickRandomFile();
+    std::cout << "playing " << file << std::endl;
 
-    audioPlayer.play(file.c_str());
-    delay(10);  // short pause to let playback start
+    SF_INFO sfInfo;
+    SNDFILE* sndFile = sf_open(file.c_str(), SFM_READ, &sfInfo);
+    if(!sndFile) {
+        std::cerr << "Error opening " << file << std::endl;
+        return;
+    }
+
+    buffer.resize(sfInfo.frames * sfInfo.channels);
+    sf_read_float(sndFile, buffer.data(), buffer.size());
+    sf_close(sndFile);
+
+    sampleRate = sfInfo.samplerate;
+    channels = sfInfo.channels;
+    currentIndex = 0;
+    isPlayingFlag = true;
 }
 
-bool randomWavPlayer::isPlaying() {
-    return audioPlayer.isPlaying();
+bool randomWavPlayer::isPlaying() const {
+    return isPlayingFlag;
+}
+
+float randomWavPlayer::process() {
+    if(!isPlayingFlag || buffer.empty()) return 0.0f;
+
+    float sample = buffer[currentIndex];
+    currentIndex++;
+    if(currentIndex >= buffer.size()) {
+        isPlayingFlag = false;
+        currentIndex = 0;
+    }
+    return sample;
 }
