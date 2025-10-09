@@ -28,10 +28,10 @@ void audioFolderInit::createFolder()
         std::cout << "magicMirror/samples folder already exists" << std::endl;
     } else {
         if (createDir(SOURCE_DIR + "samples")) {
-            std::cout << "created magicMirror/files/samples directory" << std::endl;
+            std::cout << "created" + SOURCE_DIR + "directory" << std::endl;
         } else {
             perror("mkdir failed");
-            std::cout << "Failed to create magicmirror/files/samples directory" << std::endl;
+            std::cout << "Failed to create" +SOURCE_DIR +  "directory" << std::endl;
         }
     }
     // audio binaries folder
