@@ -11,8 +11,8 @@ int fileData[100][2];
 // THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
 int fileDataSize = 100;
 
-std::string SOURCE_DIR_BIN = "~/Bela/projects/magicMirrorBela/files/";
-std::string SOURCE_DIR = "~/Bela/projects/magicMirrorBela/files/";
+std::string SOURCE_DIR_BIN = "/root/Bela/projects/magicMirrorBela/files/";
+std::string SOURCE_DIR = "/root/Bela/projects/magicMirrorBela/files/";
 
 void pushToArray(unsigned long timestamp, int fileSize)
 {

@@ -4,7 +4,8 @@ audioFolderInit::audioFolderInit(int chipSelect)
 {
     std::cout << "audioplayer::audioplayer - constructor" << std::endl;
     std::cout << "Initializing SD card..." << std::endl;
-
+    createDir(SOURCE_DIR);
+    perror("sourcedircreation failed");
     cs = chipSelect;
     // std::cout<<"INITIALISATION FAILED IN AUDIOFOLDER CONSTRUCTIO" <<std::endl;
     // return;
