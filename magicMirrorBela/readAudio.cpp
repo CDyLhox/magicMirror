@@ -15,11 +15,7 @@ ReadAudio::ReadAudio(int bufferSize){
     this->bufferSize = bufferSize;
 
     //Allocating buffer
-    int16_t* buffer;
-buffer = new int16_t[bufferSize];
-    
-    //LEMme try it this way cause teensy likes int16_t audio
-    //buffer = new double[bufferSize];
+    buffer = new double[bufferSize];
     for (int i = 0; i < bufferSize; i++) {
         buffer[i] = 0;
     }
@@ -55,8 +51,7 @@ void ReadAudio::readFromFile(int timestamp){
 //you can call this after calling readFromFile to read from array 'buffer'
 double ReadAudio::read(){
     std::cout << "readAudio::read()" << std::endl;
-    //Again, added int16t for the audio of teensy
-    int16_t output = buffer[readHead];
+    double output = buffer[readHead];
     readHead++;
 
     return output;
