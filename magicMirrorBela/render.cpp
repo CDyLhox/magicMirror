@@ -1,4 +1,3 @@
-
 /*
  ____  _____ _        _
 | __ )| ____| |      / \
@@ -80,6 +79,16 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include "saveAudio.h" 
 #include "readAudio.h"
 
+#include "randomWavPlayer.h"
+
+// Audio player
+std::vector<std::string> wavList = {
+    "~/Bela/projects/magicMirrorBela/files/samples/test1.wav",
+    "~/Bela/projects/magicMirrorBela/files/samples/test2.wav",
+    "~/Bela/projects/magicMirrorBela/files/samples/test3.wav"
+};
+randomWavPlayer* player;
+
 //Audioplayer initialisation
 audioFolderInit* folderInit;
 
@@ -100,6 +109,10 @@ bool setup(BelaContext *context, void *userData)
     folderInit = new audioFolderInit(chipSelect);
     audioSaver = new SaveAudio();
     audioReader = new ReadAudio(44100/2);
+
+    player = new randomWavPlayer(wavList);
+    player->begin();
+    player->playRandom();
 
    // pinMode(ledPin, OUTPUT);
   //digitalWrite(ledPin, HIGH);
@@ -123,6 +136,16 @@ void render(BelaContext *context, void *userData)
 
         audioSaver->write(out_l);
 
+        if(player && player->isPlaying()) {
+            float sample = player->process();
+            out_l = sample;
+            out_r = sample;
+        }
+
+        if(player && !player->isPlaying()) {
+            player->playRandom();
+        }
+
         // Write the sample into the output buffer -- done!
         audioWrite(context, n, 0, out_l);
         audioWrite(context, n, 1, out_r);
@@ -137,4 +160,5 @@ void cleanup(BelaContext *context, void *userData)
     delete folderInit;
     delete audioSaver;
     delete audioReader;
+    delete player;
 }
