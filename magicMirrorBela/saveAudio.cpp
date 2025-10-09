@@ -29,7 +29,6 @@ void SaveAudio::writeToFile(int timestamp){
         std::cout << "Error opening file!" << std::endl;
       }
     else {
-      writeToFileBool = false;
 
       bufferSize = buffer.size();
 

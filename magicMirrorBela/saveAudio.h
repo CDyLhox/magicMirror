@@ -18,7 +18,6 @@ public:
   int getBufferSize();
 
 private:
-  bool writeToFileBool = true;
   int bufferSize = 0;
   std::vector<double> buffer;
 
