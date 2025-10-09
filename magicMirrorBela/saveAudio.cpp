@@ -21,36 +21,30 @@ void SaveAudio::writeToFile(int timestamp){
     
 	std::string filename = SOURCE_DIR_BIN + "/" + std::to_string(timestamp) + ".dat";
 
-  if (writeToFileBool == true){
 
-    fout.open(filename, std::ios::out | std::ios::binary);
+  fout.open(filename, std::ios::out | std::ios::binary);
 
-    if (!fout) {
-        std::cout << "Error opening file!" << std::endl;
-      }
-    else {
-
-      bufferSize = buffer.size();
-
-      //writes the buffer away to a binary file
-      fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
-      fout.close();
-
-      pushToArray(int(timestamp), int(bufferSize));
-      //clear buffer after use to make ready for next use
-      buffer.clear();
-
+  if (!fout) {
+      std::cout << "Error opening file!" << std::endl;
     }
+  else {
+
+    bufferSize = buffer.size();
+
+    //writes the buffer away to a binary file
+    fout.write(reinterpret_cast<char*>(&buffer[0]), bufferSize * sizeof(double));
+    fout.close();
+
+    pushToArray(int(timestamp), int(bufferSize));
+    //clear buffer after use to make ready for next use
+    buffer.clear();
+
   }
 }
 
 //writes the sample to buffer
 void SaveAudio::write(double sample){
   buffer.push_back(sample);
-  //if this happens, you dont want the intended writeToFile call to work --> writeToFileBool to check
-  if(buffer.size() == buffer.max_size()){
-    writeToFile(timestamp);
-  }
 }
 
 int SaveAudio::getBufferSize() {
