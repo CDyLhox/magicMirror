@@ -3,11 +3,6 @@
 #include <SPI.h>
 #include <SD.h>
 #include <SerialFlash.h>
-#include "audioFolderInit.h"
-#include "global.h"
-#include "saveAudio.h" 
-#include "readAudio.h"
-#include "randomWavPlayer.h"
 
 // GUItool: begin automatically generated code
 AudioInputAnalog adc1(A2);
@@ -15,6 +10,7 @@ AudioAmplifier amp1;
 AudioEffectDelay delay1;
 AudioOutputPT8211_2 pt8211_2_1;
 AudioOutputI2S i2s1;            //TODO: i2s1 ombouwen
+AudioInputI2S i2sIn;
 AudioAnalyzePeak peak1;         //xy=512,410
 AudioEffectEnvelope envelope1;  //xy=580,48
 AudioControlSGTL5000 sgtl5000_1;
@@ -26,24 +22,14 @@ AudioConnection Patchcord(amp1, peak1);
 AudioConnection Patchcord5(delay1, envelope1);
 AudioConnection patchCord3(envelope1, 0, i2s1, 0);
 AudioConnection patchCord4(envelope1, 0, i2s1, 1);
-AudioConnection PatchCord6(envelope1, 0, queue1, 0);
 
-// WAV player setup
-AudioPlaySdWav playWav1;
-AudioConnection patchCordWavL(playWav1, 0, i2s1, 0);
-AudioConnection patchCordWavR(playWav1, 1, i2s1, 1);
-randomWavPlayer wavPlayer(playWav1, "/tempAudioFolderDirectory"); 
+
+AudioConnection PatchCord6(envelope1, 0, queue1, 0);
 
 
 
 
 //Audioplayer initialisation
-const int chipSelect = 10;
-audioFolderInit* folderInit;
-
-//AudioSaverReaderinitilisaion
-SaveAudio* audioSaver;
-ReadAudio* audioReader; 
 
 
 int gainPotPin = 21;
@@ -52,22 +38,17 @@ int ledPin = 23;
 int peakValuePot = 20;
 float peakValuePotRead;
 float peakVal;
+elapsedMillis millistimer;
 
 void setup() {
-
   //quick serial because i like em nice and responsive 
-  Serial.begin(115200);
+  Serial.begin(9600);
 
   //While not serial, dont do shit.
   while (!Serial) {
     ;
   }
   
-  folderInit = new audioFolderInit(chipSelect);
-  Serial.println("i made it past audiofolder");
-  audioSaver = new SaveAudio();
-  audioReader = new ReadAudio(44100/2);
-  Serial.println("i made a saveaudi");
 
   //setup the audiomem please also the alanog read reso q
   AudioMemory(240);
@@ -78,18 +59,13 @@ void setup() {
 
   //From here on out its audio functions
   //sset the speaker on, set the amp gain, yuh, and set the delay, delay, 
-  amp1.gain(1.0);
+  sgtl5000_1.enable();
+  sgtl5000_1.volume(1.0);
+
+
+  amp1.gain(4.0);
   delay1.delay(0, 1000);
 
-  sgtl5000_1.enable();
-  sgtl5000_1.volume(20);
-
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("SD init failed!");
-    while (1);
-  }
-
-wavPlayer.begin();
 
   delay1.delay(0, 300);
 
@@ -102,41 +78,29 @@ wavPlayer.begin();
 
   // start the que to record the incoming mic values
   queue1.begin();
-<<<<<<< HEAD
-
-  wavPlayer.playRandom();
-  Serial.println("Test: playing random wav file at startup");
-=======
-  playTestAudio();
->>>>>>> main
 }
 
 
 void loop() {
 
- // printMyInfo();
-  if (queue1.available() > 0) { printMyAudio(); }
+  // printMyInfo();
+   if (queue1.available() > 0) { printMyAudio(); }
 
-  gainPotRead = analogRead(gainPotPin);
+   gainPotRead = analogRead(gainPotPin);
 
-  peakValuePotRead = analogRead(peakValuePot);
-  amp1.gain(gainPotRead / 2000);  // Resolution of 0 to 4 instead of 0 to 4048
+   peakValuePotRead = analogRead(peakValuePot);
+   amp1.gain(gainPotRead / 2000);  // Resolution of 0 to 4 instead of 0 to 4048
 
-  if (peak1.available()) {
-    peakVal = peak1.read();
+   if (peak1.available()) {
+     peakVal = peak1.read();
 
-    if (peakVal > peakValuePotRead / 4000) {  // root 4000 cause you want it from 0 to 1
+     if (peakVal > peakValuePotRead / 4000) {  // root 4000 cause you want it from 0 to 1
 
-      envelope1.noteOn();
-      delay(300);
-      envelope1.noteOff();
-
-      // trigger random playback if not already playing
-      if (!wavPlayer.isPlaying()) {
-        wavPlayer.playRandom();
-        Serial.println("Triggered random WAV playback");
-      }
-  }
+       envelope1.noteOn();
+       delay(300);
+       envelope1.noteOff();
+     }
+   }
 }
 
 void printMyInfo() {
@@ -150,19 +114,15 @@ void printMyInfo() {
 
 void printMyAudio() {
   int16_t* block = queue1.readBuffer();
+
   if (block) {
     for (int i = 0; i < AUDIO_BLOCK_SAMPLES; i++) {
       int16_t sample = block[i];
       double normalized = sample / 32768.0;
-      audioSaver->write(normalized);
-      //Serial.println(normalized, 6); //the normalised print is hard on the workload of the cpu
+      Serial.println(normalized, 6); //the normalised print is hard on the workload of the cpu
     }
     queue1.freeBuffer();
   }
+  
 }
 
-void playTestAudio(){
-  audioReader->readFromFile(49060);
- //Serial.println(audioReader->read()); 
- Serial.println("hallo we zijn er voorbij"); 
-}

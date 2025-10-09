@@ -7,7 +7,6 @@
 #include "global.h"
 #include "saveAudio.h" 
 #include "readAudio.h"
-#include "randomWavPlayer.h"
 
 // GUItool: begin automatically generated code
 AudioInputAnalog adc1(A2);
@@ -27,12 +26,6 @@ AudioConnection Patchcord5(delay1, envelope1);
 AudioConnection patchCord3(envelope1, 0, i2s1, 0);
 AudioConnection patchCord4(envelope1, 0, i2s1, 1);
 AudioConnection PatchCord6(envelope1, 0, queue1, 0);
-
-// WAV player setup
-AudioPlaySdWav playWav1;
-AudioConnection patchCordWavL(playWav1, 0, i2s1, 0);
-AudioConnection patchCordWavR(playWav1, 1, i2s1, 1);
-randomWavPlayer wavPlayer(playWav1, "/tempAudioFolderDirectory"); 
 
 
 
@@ -66,7 +59,7 @@ void setup() {
   folderInit = new audioFolderInit(chipSelect);
   Serial.println("i made it past audiofolder");
   audioSaver = new SaveAudio();
-  audioReader = new ReadAudio(44100/2);
+  audioReader = new ReadAudio(44100);
   Serial.println("i made a saveaudi");
 
   //setup the audiomem please also the alanog read reso q
@@ -84,13 +77,6 @@ void setup() {
   sgtl5000_1.enable();
   sgtl5000_1.volume(20);
 
-  if (!SD.begin(BUILTIN_SDCARD)) {
-    Serial.println("SD init failed!");
-    while (1);
-  }
-
-wavPlayer.begin();
-
   delay1.delay(0, 300);
 
   //Envelope functions
@@ -102,23 +88,18 @@ wavPlayer.begin();
 
   // start the que to record the incoming mic values
   queue1.begin();
-<<<<<<< HEAD
-
-  wavPlayer.playRandom();
-  Serial.println("Test: playing random wav file at startup");
-=======
-  playTestAudio();
->>>>>>> main
 }
 
 
 void loop() {
 
+  playTestAudio();
+  Serial.println("we made it past the loop playtestaudio function call");
  // printMyInfo();
   if (queue1.available() > 0) { printMyAudio(); }
 
-  gainPotRead = analogRead(gainPotPin);
 
+  gainPotRead = analogRead(gainPotPin);
   peakValuePotRead = analogRead(peakValuePot);
   amp1.gain(gainPotRead / 2000);  // Resolution of 0 to 4 instead of 0 to 4048
 
@@ -130,12 +111,7 @@ void loop() {
       envelope1.noteOn();
       delay(300);
       envelope1.noteOff();
-
-      // trigger random playback if not already playing
-      if (!wavPlayer.isPlaying()) {
-        wavPlayer.playRandom();
-        Serial.println("Triggered random WAV playback");
-      }
+    }
   }
 }
 
@@ -163,6 +139,5 @@ void printMyAudio() {
 
 void playTestAudio(){
   audioReader->readFromFile(49060);
- //Serial.println(audioReader->read()); 
- Serial.println("hallo we zijn er voorbij"); 
+ Serial.println(audioReader->read()); 
 }

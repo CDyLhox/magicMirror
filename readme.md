@@ -13,3 +13,8 @@ welkome to the magic mirror repo. this is where Cas, Friso, and I are creating t
 - streaming.h arduino library
 - standardcpp arduino library
 - vectors arduino library
+
+##
+- engineer ss - 02 
+- solder sucker
+- made in japan

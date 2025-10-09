@@ -10,7 +10,6 @@ int fileDataSize = 100;
 
 String SOURCE_DIR_BIN = "magicMirror/audioBinaries";
 
-// FIXME: the int timestamp is 2 bytes bigger than a char can get. so the teensy starts rebootmaxxing
 void pushToArray(unsigned long timestamp, int fileSize)
 {
     if (fileIndex < 100) {

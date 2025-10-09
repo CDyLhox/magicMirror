@@ -6,8 +6,6 @@ void ReadAudio::readFromFile(int timestamp){
   String filename = SOURCE_DIR_BIN + "/" + timestamp + ".dat";
 
     //reconstructs the filename when given the proper timestamp
-
-    //FIXME: deze is broken, na een tijdje schrijft hij alleen nog lege timestamps weg
     fin = SD.open(filename.c_str(), FILE_READ);
 
     if (!fin) {
@@ -40,3 +38,8 @@ void ReadAudio::deleteBuffer(){
     delete [] buffer;
     buffer = nullptr;
 }
+
+
+/hansa plast watervaste witte tape soortvan bij de kruidvat
+
+audio library als doubles of als floates? 

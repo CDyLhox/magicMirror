@@ -5,11 +5,11 @@
 #include "chooseFile.h"
 
 ChooseFile::ChooseFile(){
-  Serial.println("ChooseFile - constructor");
+    std::cout << "ChooseFile - Constructor" << std::endl;
 }
 
 ChooseFile::~ChooseFile(){
-  Serial.println("ChooseFile - destructor");
+    std::cout << "ChooseFile - Destructor" << std::endl;
 }
 
 int ChooseFile::chooseFile(){
