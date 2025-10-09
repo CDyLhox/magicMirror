@@ -17,6 +17,7 @@ extern int fileIndex;
 extern int fileDataSize;
 extern int fileData[][2]; 
 extern std::string SOURCE_DIR_BIN;
+extern std::string SOURCE_DIR;
 
 extern float peakValuePotRead;
 extern float peakVal;
