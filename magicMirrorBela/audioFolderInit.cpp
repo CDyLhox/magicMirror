@@ -28,20 +28,20 @@ void audioFolderInit::createFolder()
 
 
     // Samples folder
-    if (dirExists("/projects/magicMirror/files/samples")) {
+    if (dirExists("/Bela/projects/magicMirror/files/samples")) {
         std::cout << "magicMirror/samples folder already exists" << std::endl;
     } else {
-        if (createDir("/projects/magicMirror/files/samples")) {
+        if (createDir("/Bela/projects/magicMirror/files/samples")) {
             std::cout << "created magicMirror/files/samples directory" << std::endl;
         } else {
             std::cout << "Failed to create magicmirror/files/samples directory" << std::endl;
         }
     }
     // audio binaries folder
-    if (dirExists("/projects/magicMirror/files/audioBinaries")) {
+    if (dirExists("/Bela/projects/magicMirror/files/audioBinaries")) {
         std::cout<<"binaries folder exists" << std::endl;
     } else {
-        if (createDir("/projects/magicMirror/files/audioBinaries")) {
+        if (createDir("/Bela/projects/magicMirror/files/audioBinaries")) {
             std::cout << "created magicmirror/audiobinaries" << std::endl;
         } else {
             std::cout << "Failed to crreate magicmirror/audioBinaries Directory" << std::endl;
@@ -51,6 +51,6 @@ void audioFolderInit::createFolder()
 
 void audioFolderInit::freeAudioBinaryFolder()
 {
-    removeDir("/projects/magicMirror/files/audioBinaries");
+    removeDir("/Bela/projects/magicMirror/files/audioBinaries");
     std::cout<<"removing /projects/magicMirror/files/audioBinaries" << std::endl;
 }
