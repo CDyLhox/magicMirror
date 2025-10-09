@@ -13,6 +13,7 @@
 #include <ctime>
 
 extern time_t timestamp;
+extern struct timespec ts;
 extern int fileIndex;
 extern int fileDataSize;
 extern int fileData[][2]; 

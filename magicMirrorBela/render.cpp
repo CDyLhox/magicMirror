@@ -65,19 +65,18 @@ your input is mono - if it's not you will have to account for multiple channels)
 Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers).
 */
 
-#include <sndfile.h>      // for reading audio files
-#include <vector>         // dynamic arrays for samples
-#include <string>         // standard strings
-#include <iostream>       // logging / debugging
-#include <cmath>          // math for trim + normalize
-#include <random>         // random file selection
 #include <Bela.h>
-
+#include <cmath>     // math for trim + normalize
+#include <iostream>  // logging / debugging
+#include <random>    // random file selection
+#include <sndfile.h> // for reading audio files
+#include <string>    // standard strings
+#include <vector>    // dynamic arrays for samples
 
 #include "audioFolderInit.h"
 #include "global.h"
-#include "saveAudio.h" 
 #include "readAudio.h"
+#include "saveAudio.h"
 
 #include "randomWavPlayer.h"
 
@@ -89,12 +88,12 @@ std::vector<std::string> wavList = {
 };
 randomWavPlayer* player;
 
-//Audioplayer initialisation
+// Audioplayer initialisation
 audioFolderInit* folderInit;
 
-//AudioSaverReaderinitilisaion
+// AudioSaverReaderinitilisaion
 SaveAudio* audioSaver;
-ReadAudio* audioReader; 
+ReadAudio* audioReader;
 
 int gainPotPin = 21;
 int ledPin = 23;
@@ -104,45 +103,46 @@ int peakValuePot = 20;
 // on the period size or sample rate.
 //
 // Return true on success; returning false halts the program.
-bool setup(BelaContext *context, void *userData)
+bool setup(BelaContext* context, void* userData)
 {
     folderInit = new audioFolderInit(chipSelect);
     audioSaver = new SaveAudio();
-    audioReader = new ReadAudio(44100/2);
+    audioReader = new ReadAudio(44100 / 2);
 
     player = new randomWavPlayer(wavList);
     player->begin();
     player->playRandom();
 
-   // pinMode(ledPin, OUTPUT);
-  //digitalWrite(ledPin, HIGH);
+    // pinMode(ledPin, OUTPUT);
+    // digitalWrite(ledPin, HIGH);
 
-	return true;
+    return true;
 }
 
-
-void render(BelaContext *context, void *userData)
+void render(BelaContext* context, void* userData)
 {
-    for(unsigned int n = 0; n < context->audioFrames; n++) {
+    for (unsigned int n = 0; n < context->audioFrames; n++) {
 
         float out_l = 0;
         float out_r = 0;
 
         // Read audio inputs
-        out_l = audioRead(context,n,0);
-        out_r = audioRead(context,n,1);
+        out_l = audioRead(context, n, 0);
+        out_r = audioRead(context, n, 1);
 
-        //TODO: add fx here 
+        // TODO: add fx here
 
+        clock_gettime(CLOCK_REALTIME, &ts);
+        std::cout << "seconds: " << ts.tv_sec << ", nanoseconds: " << ts.tv_nsec << std::endl;
         audioSaver->write(out_l);
 
-        if(player && player->isPlaying()) {
+        if (player && player->isPlaying()) {
             float sample = player->process();
             out_l = sample;
             out_r = sample;
         }
 
-        if(player && !player->isPlaying()) {
+        if (player && !player->isPlaying()) {
             player->playRandom();
         }
 
@@ -155,7 +155,7 @@ void render(BelaContext *context, void *userData)
 // cleanup() is called once at the end, after the audio has stopped.
 // Release any resources that were allocated in setup().
 
-void cleanup(BelaContext *context, void *userData)
+void cleanup(BelaContext* context, void* userData)
 {
     delete folderInit;
     delete audioSaver;

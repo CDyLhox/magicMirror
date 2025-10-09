@@ -1,6 +1,5 @@
 #include "global.h"
-
-time_t timestamp;
+struct timespec ts;
 int fileIndex = 0;
 
 const int chipSelect = 10;
