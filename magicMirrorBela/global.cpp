@@ -1,6 +1,5 @@
 #include "global.h"
 
-
 time_t timestamp;
 
 const int chipSelect = 10;
@@ -21,7 +20,7 @@ int fileData[fileDataSize][2];
 
 void pushToArray(unsigned long timestamp, int fileSize)
 {
-    if (fileIndex < 100) {
+    if (fileIndex < fileDataSize) {
         std::cout << "globals pushtoarray" << std::endl;
         fileData[fileIndex][0] = timestamp;
         fileData[fileIndex][1] = fileSize;

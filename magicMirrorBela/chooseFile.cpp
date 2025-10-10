@@ -14,16 +14,18 @@ ChooseFile::~ChooseFile(){
 
 
 //CHOOSEFILE IS THE ONLY FUNCTION YOU NEED TO CALL
-int ChooseFile::chooseFile(int prevFile){
-  random = rand() % 3;
+int ChooseFile::chooseFile(){
   
   if(random == 0){
-  	compareFileLength();
+  	prevFile = compareFileLength();
   }
   else if(random == 1){
-  	returnNextFile(prevFile);
+  	prevFile = returnNextFile(prevFile);
   }
-  else returnOldestFile();
+  else prevFile = returnOldestFile();
+
+  random = rand() % 3;
+  return prevFile;
 }
 
 //This code can be written more efficient but for the sake of readability, I have decided not to

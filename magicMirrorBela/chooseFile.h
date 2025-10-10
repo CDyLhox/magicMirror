@@ -7,7 +7,7 @@ public:
   ChooseFile();
   ~ChooseFile();
 
-  int chooseFile(int prevFile);
+  int chooseFile();
   int findFileIndex(int file);
 
   int compareFileLength();
@@ -17,6 +17,8 @@ public:
 
 
 private:
-	int random = 0;
+//2 so that returnOldestFile is called first
+	int random = 2;
 	int i = 0;
+	int prevFile;
 };
