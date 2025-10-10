@@ -7,25 +7,23 @@
 #include <iostream>
 
 SaveAudio::SaveAudio(){
-	std::cout << "SaveAudio - constructor" << std::endl;
+	// std::cout << "SaveAudio - constructor" << std::endl;
 }
 
 SaveAudio::~SaveAudio(){
-	std::cout << "SaveAudio - destructor" << std::endl;
+	// std::cout << "SaveAudio - destructor" << std::endl;
 }
 
 //this is called to write the buffer away after it's full
 void SaveAudio::writeToFile(int timestamp){
-    std::cout << "SaveAudio::writeToFile() " << std::endl;
-    std::cout << timestamp << std::endl;
+    // std::cout << "SaveAudio::writeToFile() " << std::endl;
     
-	std::string filename = SOURCE_DIR_BIN + "/" + std::to_string(timestamp) + ".dat";
+	std::string filename = SOURCE_DIR + "audioBinaries/" + std::to_string(timestamp) + ".dat";
 
-
-  fout.open(filename, std::ios::out | std::ios::binary);
+	fout.open(filename, std::ios::out | std::ios::binary);
 
   if (!fout) {
-      std::cout << "Error opening file!" << std::endl;
+      std::cout << "SaveAudio::writeToFile: Error opening file!" << std::endl;
     }
   else {
 

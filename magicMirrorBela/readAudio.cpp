@@ -10,7 +10,7 @@
 // 2. use 'read' to get the values out of the buffer
 
 ReadAudio::ReadAudio(int bufferSize){
-       std::cout << "ReadAudio - constructor" << std::endl;
+       //std::cout << "ReadAudio - constructor" << std::endl;
 
     this->bufferSize = bufferSize;
 
@@ -22,22 +22,20 @@ ReadAudio::ReadAudio(int bufferSize){
 }
 
 ReadAudio::~ReadAudio(){
-    std::cout << "ReadAudio - destructor" << std::endl;
+    // std::cout << "ReadAudio - destructor" << std::endl;
     deleteBuffer();
 }
 
 void ReadAudio::readFromFile(int timestamp){
-  std::string filename = SOURCE_DIR_BIN + "/" + std::to_string(timestamp) + ".dat";
+	std::string filename = SOURCE_DIR + "audioBinaries/" + std::to_string(timestamp) + ".dat";
 
     //reconstructs the filename when given the proper timestamp
     fin.open(filename, std::ios::in | std::ios::binary);
 
     if (!fin) {
-            std::cout << "ReadAudio::readFromFile. Error opening file!" << std::endl;
+            std::cout << "ReadAudio::readFromFile: Error opening file!" << std::endl;
     }
     else {
-
-        std::cout << "ReadAudio::readFromFile, fileread succes 👍" << std::endl;
         //writes the binary file to the array 'buffer'
         fin.read(reinterpret_cast<char*>(buffer), bufferSize * sizeof(double));
         fin.close();
@@ -50,7 +48,7 @@ void ReadAudio::readFromFile(int timestamp){
 
 //you can call this after calling readFromFile to read from array 'buffer'
 double ReadAudio::read(){
-    std::cout << "readAudio::read()" << std::endl;
+    // std::cout << "readAudio::read()" << std::endl;
     double output = buffer[readHead];
     readHead++;
 

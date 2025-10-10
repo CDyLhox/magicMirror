@@ -1,4 +1,3 @@
-
 /*
  ____  _____ _        _
 | __ )| ____| |      / \
@@ -66,62 +65,106 @@ your input is mono - if it's not you will have to account for multiple channels)
 Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers).
 */
 
-#include <sndfile.h>      // for reading audio files
-#include <vector>         // dynamic arrays for samples
-#include <string>         // standard strings
-#include <iostream>       // logging / debugging
-#include <cmath>          // math for trim + normalize
-#include <random>         // random file selection
 #include <Bela.h>
-
+#include <cmath>     // math for trim + normalize
+#include <iostream>  // logging / debugging
+#include <random>    // random file selection
+#include <string>    // standard strings
+#include <vector>    // dynamic arrays for samples
 
 #include "audioFolderInit.h"
 #include "global.h"
-#include "saveAudio.h" 
 #include "readAudio.h"
+#include "saveAudio.h"
+#include "effect.h"
+#include "delay.h"
+#include "low-passFilter.h"
+#include "randomWavPlayer.h"
 
-//Audioplayer initialisation
+// Audio player
+std::vector<std::string> wavList = {
+    "~/Bela/projects/magicMirrorBela/files/samples/test1.wav",
+    "~/Bela/projects/magicMirrorBela/files/samples/test2.wav",
+    "~/Bela/projects/magicMirrorBela/files/samples/test3.wav"
+};
+randomWavPlayer* player;
+
+// Audioplayer initialisation
 audioFolderInit* folderInit;
 
-//AudioSaverReaderinitilisaion
+// AudioSaverReaderinitilisaion
 SaveAudio* audioSaver;
-ReadAudio* audioReader; 
+ReadAudio* audioReader;
+
+// Effects initialisation
+Delay* delay;
+LPF* lpf;
 
 int gainPotPin = 21;
 int ledPin = 23;
 int peakValuePot = 20;
+
+int k = 0;
+
+
 // setup() is called once before the audio rendering starts.
 // Use it to perform any initialisation and allocation which is dependent
 // on the period size or sample rate.
 //
 // Return true on success; returning false halts the program.
-bool setup(BelaContext *context, void *userData)
+bool setup(BelaContext* context, void* userData)
 {
     folderInit = new audioFolderInit(chipSelect);
     audioSaver = new SaveAudio();
-    audioReader = new ReadAudio(44100/2);
+    audioReader = new ReadAudio(44100 / 2);
+    
+    //FX
+    delay = new Delay(0.5, 44100/4, 1);
+    lpf = new LPF(0.5);
 
-   // pinMode(ledPin, OUTPUT);
-  //digitalWrite(ledPin, HIGH);
+    player = new randomWavPlayer(wavList);
+    player->begin();
+    player->playRandom();
 
-	return true;
+    // pinMode(ledPin, OUTPUT);
+    // digitalWrite(ledPin, HIGH);
+    
+   
+
+    return true;
 }
 
-
-void render(BelaContext *context, void *userData)
+void render(BelaContext* context, void* userData)
 {
-    for(unsigned int n = 0; n < context->audioFrames; n++) {
+    for (unsigned int n = 0; n < context->audioFrames; n++) {
 
         float out_l = 0;
         float out_r = 0;
 
         // Read audio inputs
-        out_l = audioRead(context,n,0);
-        out_r = audioRead(context,n,1);
+        out_l = audioRead(context, n, 0);
+        out_r = audioRead(context, n, 1);
 
-        //TODO: add fx here 
+        // FX
+        out_l += delay->applyEffect(out_l);
+        out_l += lpf->process(out_l);
 
-        audioSaver->write(out_l);
+        k++;
+        if(k == 441000/2){
+        	time(&timestamp);
+        	std::cout << "Render; timestamp: " <<  timestamp << std::endl;
+        	audioSaver->writeToFile(timestamp);
+        }
+
+        if (player && player->isPlaying()) {
+            float sample = player->process();
+            out_l = sample;
+            out_r = sample;
+        }
+
+        if (player && !player->isPlaying()) {
+            player->playRandom();
+        }
 
         // Write the sample into the output buffer -- done!
         audioWrite(context, n, 0, out_l);
@@ -132,9 +175,10 @@ void render(BelaContext *context, void *userData)
 // cleanup() is called once at the end, after the audio has stopped.
 // Release any resources that were allocated in setup().
 
-void cleanup(BelaContext *context, void *userData)
+void cleanup(BelaContext* context, void* userData)
 {
     delete folderInit;
     delete audioSaver;
     delete audioReader;
+    delete player;
 }

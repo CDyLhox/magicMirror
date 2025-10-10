@@ -4,27 +4,31 @@
 
 
 #pragma once
-//#include <Streaming.h>
-//#include <Vector.h>
 #include <string>
 #include <ctime>
 #include <algorithm>
 #include <iostream>
 #include <ctime>
 
-extern time_t timestamp;
-extern int fileIndex;
-extern int fileDataSize;
-extern int fileData[][2]; 
-extern std::string SOURCE_DIR_BIN;
 
+extern time_t timestamp;
+
+extern std::string SOURCE_DIR;
+
+//Push to array
+extern int fileIndex;
+extern const int fileDataSize;
+extern int fileData[][2]; 
+
+void pushToArray(unsigned long timestamp, int fileSize);
+
+
+//print analog data
 extern float peakValuePotRead;
 extern float peakVal;
 extern float gainPotRead;
 
 extern const int chipSelect;
-
-void pushToArray(unsigned long timestamp, int fileSize);
 
 void printAnalogData();
 

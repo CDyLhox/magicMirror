@@ -12,8 +12,18 @@ ChooseFile::~ChooseFile(){
     std::cout << "ChooseFile - Destructor" << std::endl;
 }
 
-int ChooseFile::chooseFile(){
-  // filenames
+
+//CHOOSEFILE IS THE ONLY FUNCTION YOU NEED TO CALL
+int ChooseFile::chooseFile(int prevFile){
+  random = rand() % 3;
+  
+  if(random == 0){
+  	compareFileLength();
+  }
+  else if(random == 1){
+  	returnNextFile(prevFile);
+  }
+  else returnOldestFile();
 }
 
 //This code can be written more efficient but for the sake of readability, I have decided not to
@@ -54,7 +64,8 @@ int ChooseFile::returnNextFile(int prevFile){
     return fileData[indexNextFile][0];
 }
 
-//FIXME - DIT IS ALTIJD DEZELFDE FILE (wordt niet uit array verwijderd)
 int ChooseFile::returnOldestFile(){
-    return fileData[0][0];
+    return fileData[i][0];
+    //to prevent the code from playing the same file over and over again
+    i++;
 }

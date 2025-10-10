@@ -7,8 +7,7 @@ public:
   ChooseFile();
   ~ChooseFile();
 
-  int chooseFile();
-
+  int chooseFile(int prevFile);
   int findFileIndex(int file);
 
   int compareFileLength();
@@ -18,5 +17,6 @@ public:
 
 
 private:
-
+	int random = 0;
+	int i = 0;
 };
