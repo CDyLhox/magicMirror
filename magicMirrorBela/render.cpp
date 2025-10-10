@@ -83,7 +83,6 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include "low-passFilter.h"
 #include "randomWavPlayer.h"
 
-#define DEFAULT_HP_LEVEL -22; 
 
 // Audio player
 std::vector<std::string> wavList = {
@@ -124,7 +123,7 @@ bool setup(BelaContext* context, void* userData)
     fileChooser = new ChooseFile();
 
     // FX
-    delay = new Delay(0, 4, 1);
+    delay = new Delay(0, 44100, 1);
 
     lpf = new LPF(1);
 
@@ -134,7 +133,6 @@ bool setup(BelaContext* context, void* userData)
 
     // pinMode(ledPin, OUTPUT);
     // digitalWrite(ledPin, HIGH);
-
     return true;
 }
 
@@ -152,7 +150,7 @@ void render(BelaContext* context, void* userData)
         audioSaver->write(out_l);
         // FX
         out_l = delay->applyEffect(out_l);
-        out_l += lpf->process(out_l);
+        //out_l = lpf->process(out_l);
 
         k++;
         // std::cout << "k = " <<k << std::endl;
@@ -191,3 +189,4 @@ void cleanup(BelaContext* context, void* userData)
     delete audioReader;
     delete player;
 }
+
