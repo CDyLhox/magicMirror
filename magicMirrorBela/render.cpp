@@ -69,7 +69,6 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include <cmath>     // math for trim + normalize
 #include <iostream>  // logging / debugging
 #include <random>    // random file selection
-#include <sndfile.h> // for reading audio files
 #include <string>    // standard strings
 #include <vector>    // dynamic arrays for samples
 
@@ -78,6 +77,9 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include "readAudio.h"
 #include "saveAudio.h"
 
+#include "effect.h"
+#include "delay.h"
+#include "low-passFilter.h"
 #include "randomWavPlayer.h"
 
 // Audio player
@@ -95,9 +97,17 @@ audioFolderInit* folderInit;
 SaveAudio* audioSaver;
 ReadAudio* audioReader;
 
+// Effects initialisation
+Delay* delay;
+LPF* lpf;
+
 int gainPotPin = 21;
 int ledPin = 23;
 int peakValuePot = 20;
+
+int k = 0;
+
+
 // setup() is called once before the audio rendering starts.
 // Use it to perform any initialisation and allocation which is dependent
 // on the period size or sample rate.
@@ -108,6 +118,10 @@ bool setup(BelaContext* context, void* userData)
     folderInit = new audioFolderInit(chipSelect);
     audioSaver = new SaveAudio();
     audioReader = new ReadAudio(44100 / 2);
+    
+    //FX
+    delay = new Delay(0.5, 44100/4, 1);
+    lpf = new LPF(0.5);
 
     player = new randomWavPlayer(wavList);
     player->begin();
@@ -115,6 +129,8 @@ bool setup(BelaContext* context, void* userData)
 
     // pinMode(ledPin, OUTPUT);
     // digitalWrite(ledPin, HIGH);
+    
+   
 
     return true;
 }
@@ -130,11 +146,17 @@ void render(BelaContext* context, void* userData)
         out_l = audioRead(context, n, 0);
         out_r = audioRead(context, n, 1);
 
-        // TODO: add fx here
-
-        clock_gettime(CLOCK_REALTIME, &ts);
-        std::cout << "seconds: " << ts.tv_sec << ", nanoseconds: " << ts.tv_nsec << std::endl;
         audioSaver->write(out_l);
+        // FX
+        out_l += delay->applyEffect(out_l);
+        out_l += lpf->process(out_l);
+
+        k++;
+        if(k == 441000/2){
+        	time(&timestamp);
+        	std::cout << "Render; timestamp: " <<  timestamp << std::endl;
+        	audioSaver->writeToFile(timestamp);
+        }
 
         if (player && player->isPlaying()) {
             float sample = player->process();
@@ -145,6 +167,7 @@ void render(BelaContext* context, void* userData)
         if (player && !player->isPlaying()) {
             player->playRandom();
         }
+
 
         // Write the sample into the output buffer -- done!
         audioWrite(context, n, 0, out_l);

@@ -3,9 +3,9 @@
 //
 #include "circularBuffer.h"
 #include <iostream>
-#include "interpolation.h"
+#include <cmath>
 
-CircularBuffer::CircularBuffer(unsigned int bufferSize, double numSamplesDelay) {
+CircularBuffer::CircularBuffer(unsigned int bufferSize, int numSamplesDelay) {
     // std::cout << "constructor - Circular Buffer" << std::endl;
     this->bufferSize = bufferSize;
 
@@ -14,9 +14,9 @@ CircularBuffer::CircularBuffer(unsigned int bufferSize, double numSamplesDelay) 
     for (int i = 0; i < bufferSize; i++) {
         buffer[i] = 0;
     }
+    
     this->numSamplesDelay = numSamplesDelay;
     updateDelay();
-    sampleOffset = numSamplesDelay - this->numSamplesDelay;
 }
 
 CircularBuffer::~CircularBuffer(){
@@ -43,17 +43,16 @@ void CircularBuffer::setBufferSize(int bufferSize){
 
 int CircularBuffer::getBufferSize(){return bufferSize;}
 
-double CircularBuffer::getNumSamplesDelay() {return numSamplesDelay;}
+int CircularBuffer::getNumSamplesDelay() {return numSamplesDelay;}
 
 
-void CircularBuffer::setNumSamplesDelay(double numSamplesDelay) {
+void CircularBuffer::setNumSamplesDelay(int numSamplesDelay) {
     if (numSamplesDelay < 0) {
         std::cout << "CircularBuffer::setNumSamplesDelay - numSamplesDelay exceeds range [0, inf]"
                 << numSamplesDelay << std::endl;
     }
     else {
-        this->numSamplesDelay = floor(numSamplesDelay);
-        sampleOffset = numSamplesDelay - this->numSamplesDelay;
+        this->numSamplesDelay = numSamplesDelay;
         updateDelay();
     }
 }
@@ -65,20 +64,6 @@ void CircularBuffer::write(double sample) {
     wrap(++writeHead);
 }
 
-//FIXME - this doesnt work
-double CircularBuffer::readBetweenSamples() {
-  //read the value, put in output , then increment the readHead
-    double sample = buffer[readHead];
-    readHead++;
-    wrap(readHead);
-    double nextSample = buffer[readHead];
-
-    //TODO - does this work? -- numSamplesDelay is now double and sampleOffset is calculated with that
-    //Interpolating between sample and nextSample
-    double output = Interpolation::linMap(sampleOffset, sample, nextSample);
-
-    return output;
-}
 
 double CircularBuffer::read() {
     double output = buffer[readHead];

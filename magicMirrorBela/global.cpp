@@ -1,21 +1,25 @@
 #include "global.h"
-struct timespec ts;
-int fileIndex = 0;
+
+time_t timestamp;
 
 const int chipSelect = 10;
 float peakValuePotRead;
 float peakVal;
-// Array with [filename/timestamp, fileSize]
-int fileData[100][2];
-// THIS SHOULD MATCH THE NUMBER THATS IN THE FIRST BRACKETS OF fileData
-int fileDataSize = 100;
 
 std::string SOURCE_DIR_BIN = "/root/Bela/projects/magicMirrorBela/files/";
 std::string SOURCE_DIR = "/root/Bela/projects/magicMirrorBela/files/";
 
+//------------------------PUSH TO ARRAY---------------------------------- (SHOULDVE USED A CIRC BUFFER LOL)
+
+int fileIndex = 0;
+
+// Array with [filename/timestamp, fileSize]
+const int fileDataSize = 100;
+int fileData[fileDataSize][2];
+
 void pushToArray(unsigned long timestamp, int fileSize)
 {
-    if (fileIndex < 100) {
+    if (fileIndex < fileDataSize) {
         std::cout << "globals pushtoarray" << std::endl;
         fileData[fileIndex][0] = timestamp;
         fileData[fileIndex][1] = fileSize;
@@ -25,6 +29,7 @@ void pushToArray(unsigned long timestamp, int fileSize)
     };
 }
 
+//--------------------------------------PRINT ANALOG DATA----------------------------------------------------
 void printAnalogData()
 {
     std::cout

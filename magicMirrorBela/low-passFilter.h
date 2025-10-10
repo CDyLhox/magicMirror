@@ -4,9 +4,6 @@
 
 #pragma once
 
-
-#include "filter.h"
-
 class LPF{
 public:
     LPF() = default;

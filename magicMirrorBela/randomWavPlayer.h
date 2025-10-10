@@ -1,13 +1,12 @@
-#ifndef RANDOM_WAV_PLAYER_H
-#define RANDOM_WAV_PLAYER_H
+#pragma once
 
-#include <sndfile.h>
+#include <Bela.h>
+#include <libraries/sndfile/sndfile.h>
 #include <vector>
 #include <string>
 #include <iostream>
 #include <cmath>
 #include <random>
-#include <Bela.h>
 
 class randomWavPlayer {
 public:
@@ -28,4 +27,3 @@ private:
     bool isPlayingFlag = false;
 };
 
-#endif
