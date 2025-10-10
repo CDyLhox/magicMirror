@@ -24,6 +24,7 @@ std::string randomWavPlayer::pickRandomFile() {
 }
 
 void randomWavPlayer::playRandom() {
+    std::cout<< "randomWavPlayer" << std::endl;
     if(wavFiles.empty()) {
         std::cout << "nothing to play" << std::endl;
         return;

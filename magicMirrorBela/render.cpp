@@ -66,21 +66,24 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 */
 
 #include <Bela.h>
-#include <cmath>     // math for trim + normalize
-#include <iostream>  // logging / debugging
-#include <random>    // random file selection
-#include <string>    // standard strings
-#include <vector>    // dynamic arrays for samples
+#include <cmath>    // math for trim + normalize
+#include <iostream> // logging / debugging
+#include <random>   // random file selection
+#include <string>   // standard strings
+#include <vector>   // dynamic arrays for samples
 
 #include "audioFolderInit.h"
 #include "global.h"
 #include "readAudio.h"
 #include "saveAudio.h"
+#include "chooseFile.h"
 
-#include "effect.h"
 #include "delay.h"
+#include "effect.h"
 #include "low-passFilter.h"
 #include "randomWavPlayer.h"
+
+#define DEFAULT_HP_LEVEL -22; 
 
 // Audio player
 std::vector<std::string> wavList = {
@@ -96,6 +99,7 @@ audioFolderInit* folderInit;
 // AudioSaverReaderinitilisaion
 SaveAudio* audioSaver;
 ReadAudio* audioReader;
+ChooseFile* fileChooser;
 
 // Effects initialisation
 Delay* delay;
@@ -107,7 +111,6 @@ int peakValuePot = 20;
 
 int k = 0;
 
-
 // setup() is called once before the audio rendering starts.
 // Use it to perform any initialisation and allocation which is dependent
 // on the period size or sample rate.
@@ -118,10 +121,12 @@ bool setup(BelaContext* context, void* userData)
     folderInit = new audioFolderInit(chipSelect);
     audioSaver = new SaveAudio();
     audioReader = new ReadAudio(44100 / 2);
-    
-    //FX
-    delay = new Delay(0.5, 44100/4, 1);
-    lpf = new LPF(0.5);
+    fileChooser = new ChooseFile();
+
+    // FX
+    delay = new Delay(0, 4, 1);
+
+    lpf = new LPF(1);
 
     player = new randomWavPlayer(wavList);
     player->begin();
@@ -129,8 +134,6 @@ bool setup(BelaContext* context, void* userData)
 
     // pinMode(ledPin, OUTPUT);
     // digitalWrite(ledPin, HIGH);
-    
-   
 
     return true;
 }
@@ -148,30 +151,33 @@ void render(BelaContext* context, void* userData)
 
         audioSaver->write(out_l);
         // FX
-        out_l += delay->applyEffect(out_l);
+        out_l = delay->applyEffect(out_l);
         out_l += lpf->process(out_l);
 
         k++;
-        if(k == 441000/2){
-        	time(&timestamp);
-        	std::cout << "Render; timestamp: " <<  timestamp << std::endl;
-        	audioSaver->writeToFile(timestamp);
-        }
+        // std::cout << "k = " <<k << std::endl;
+        if (k == 441000 / 2) { //if timer is about 5 seconds, writeToFile
+            time(&timestamp);
+            std::cout << "Render; timestamp: " << timestamp << std::endl;
+            audioSaver->writeToFile(timestamp);
 
+            // if (player && !player->isPlaying()) {
+            player->playRandom();
+            //}
+        }
+        if (k == 441000){
+            audioReader->readFromFile(fileChooser->chooseFile());
+        }
+        
         if (player && player->isPlaying()) {
             float sample = player->process();
             out_l = sample;
             out_r = sample;
         }
-
-        if (player && !player->isPlaying()) {
-            player->playRandom();
-        }
-
-
+        
         // Write the sample into the output buffer -- done!
         audioWrite(context, n, 0, out_l);
-        audioWrite(context, n, 1, out_r);
+        audioWrite(context, n, 1, out_l);
     }
 }
 
