@@ -40,9 +40,6 @@ void ReadAudio::readFromFile(int timestamp){
         fin.read(reinterpret_cast<char*>(buffer), bufferSize * sizeof(double));
         fin.close();
 
-        //clearing everything for next use
-        readHead = 0;
-        deleteBuffer();
     }
 }
 
@@ -51,6 +48,11 @@ double ReadAudio::read(){
     // std::cout << "readAudio::read()" << std::endl;
     double output = buffer[readHead];
     readHead++;
+
+    if(readHead == bufferSize){
+        deleteBuffer();
+        readHead = 0;
+    }
 
     return output;
 }
