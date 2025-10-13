@@ -20,11 +20,13 @@ float readAveraged(byte pin, int samples=16) {
 #include <SerialFlash.h>
 
 // GUItool: begin automatically generated code
-AudioInputI2S            i2s1;           //xy=119,52
+AudioInputI2S            i2s1;//xy=119,52
+
 AudioInputAnalog adc1(A2);
 AudioAmplifier amp1;
 AudioOutputI2S audioShield;
 AudioControlSGTL5000 sgtl5000_1;
+AudioFilterStateVariable filter1;
 //
 AudioAnalyzePeak         peak1;          //xy=379,43
 AudioConnection          patchCord1(adc1, 0, peak1, 0);
@@ -39,10 +41,13 @@ int gainPin = A7;
 
 
   void setup() {
-    AudioMemory(4);
+
+    AudioMemory(16);
     Serial.begin(9600);
     //while(!Serial){;}
   amp1.gain(0.10);
+
+
   sgtl5000_1.enable();
   sgtl5000_1.volume(1);
   }

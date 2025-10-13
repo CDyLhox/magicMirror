@@ -86,9 +86,12 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 
 // Audio player
 std::vector<std::string> wavList = {
-    SOURCE_DIR + "samples/test1.wav",
-    SOURCE_DIR + "samples/test2.wav",
-    SOURCE_DIR + "samples/test3.wav"
+    SOURCE_DIR + "files/samples/knockWood.wav",
+    SOURCE_DIR + "files/samples/rain.wav",
+    SOURCE_DIR + "files/samples/thunder.wav",
+    SOURCE_DIR + "files/samples/waves.wav",
+    SOURCE_DIR + "files/samples/windForest.wav",
+    SOURCE_DIR + "files/samples/windowClean.wav"
 };
 randomWavPlayer* player;
 
@@ -127,7 +130,7 @@ bool setup(BelaContext* context, void* userData)
     delay = new Delay(0, 44100, 1);
 
     for(int i = 0; i < numFilters; i++){
-    filters[i] = new LPF(0.4);
+    filters[i] = new LPF(0.1);
     }
 
     player = new randomWavPlayer(wavList);
