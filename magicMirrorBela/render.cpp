@@ -118,6 +118,12 @@ int k = 0;
 // Use it to perform any initialisation and allocation which is dependent
 // on the period size or sample rate.
 //
+//
+////VOLUME NEEDS TO BE HEADPHONE OUT -18 INPUT GAIN 0
+///
+///
+///
+///
 // Return true on success; returning false halts the program.
 bool setup(BelaContext* context, void* userData)
 {
@@ -182,8 +188,8 @@ void render(BelaContext* context, void* userData)
         
         if (player && player->isPlaying()) {
             float sample = player->process();
-            out_l += sample;
-            out_r += sample;
+            out_l += sample*3;
+            out_r += sample*3;
         }
 
         for (int i = 0; i < numFilters; i++) {

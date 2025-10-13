@@ -45,7 +45,7 @@ int gainPin = A7;
     AudioMemory(16);
     Serial.begin(9600);
     //while(!Serial){;}
-  amp1.gain(0.10);
+  amp1.gain(0.02);
 
 
   sgtl5000_1.enable();
