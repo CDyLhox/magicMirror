@@ -59,6 +59,11 @@ double ReadAudio::read(){
 
 
 void ReadAudio::deleteBuffer(){
+  if(buffer == nullptr){
+    std::cout << "ReadAudio::deleteBuffer(); buffer already deleted" << std::endl;
+  }
+  else{
     delete [] buffer;
     buffer = nullptr;
+  }
 }

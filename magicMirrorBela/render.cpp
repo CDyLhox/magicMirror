@@ -112,6 +112,7 @@ float threshhold = 0.01;
 bool threshholdBool = false;
 bool prevThreshholdBool = false;
 int choosenFile;
+bool audioReaderExists = false
 
 int counter = 0;
 
@@ -171,6 +172,7 @@ void render(BelaContext* context, void* userData)
           //CHOOSE BIN FILE TO PLAY AND PUT IT IN A BUFFER
           choosenFile = fileChooser->chooseFile();
           audioReader = new ReadAudio(fileData[fileChooser->findFileIndex(choosenFile)][1]);  //find the length of the binary file to play and create audioreader with a buffer with length of that binary file
+          audioReaderExists = true;
           audioReader->readFromFile(choosenFile);
         }
 
@@ -188,8 +190,11 @@ void render(BelaContext* context, void* userData)
 
 
         //READ BIN FILE --> NOW PLAYS IMMEDIATELY AFTER THE PERSON STOPS TALKING
-        if(audioReader.buffer != nullptr) out_l += audioReader->read();
-        else delete audioReader;
+        if(audioReader->getBuffer() != nullptr) out_l += audioReader->read();
+        else if (audioReaderExists == true) {
+          delete audioReader;
+          audioReaderExists = false;
+		}
 
         prevThreshholdBool = threshholdBool;
 
