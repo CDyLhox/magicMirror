@@ -9,9 +9,9 @@ randomWavPlayer::randomWavPlayer(const std::vector<std::string>& files)
 
 void randomWavPlayer::begin() {
     if(wavFiles.empty()) {
-        std::cout << "No wav files provided!" << std::endl;
+        // std::cout << "No wav files provided!" << std::endl;
     } else {
-        std::cout << wavFiles.size() << " wav files ready." << std::endl;
+        // std::cout << wavFiles.size() << " wav files ready." << std::endl;
     }
 }
 
@@ -24,21 +24,23 @@ std::string randomWavPlayer::pickRandomFile() {
 }
 
 void randomWavPlayer::playRandom() {
-    std::cout<< "randomWavPlayer" << std::endl;
+    // std::cout<< "randomWavPlayer" << std::endl;
     if(wavFiles.empty()) {
-        std::cout << "nothing to play" << std::endl;
+        // std::cout << "nothing to play" << std::endl;
         return;
     }
 
     std::string file = pickRandomFile();
-    std::cout << "playing " << file << std::endl;
+    // std::cout << "playing " << file << std::endl;
 
     SF_INFO sfInfo;
     SNDFILE* sndFile = sf_open(file.c_str(), SFM_READ, &sfInfo);
     if(!sndFile) {
-        std::cerr << "Error opening " << file << std::endl;
+        // std::cerr << "Error opening " << file << std::endl;
         return;
     }
+
+    std::cout << "Attempting to open: " << file << std::endl;
 
     buffer.resize(sfInfo.frames * sfInfo.channels);
     sf_read_float(sndFile, buffer.data(), buffer.size());
