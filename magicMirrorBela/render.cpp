@@ -86,9 +86,9 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 
 // Audio player
 std::vector<std::string> wavList = {
-    "~/Bela/projects/magicMirrorBela/files/samples/test1.wav",
-    "~/Bela/projects/magicMirrorBela/files/samples/test2.wav",
-    "~/Bela/projects/magicMirrorBela/files/samples/test3.wav"
+    SOURCE_DIR + "samples/test1.wav",
+    SOURCE_DIR + "samples/test2.wav",
+    SOURCE_DIR + "samples/test3.wav"
 };
 randomWavPlayer* player;
 
@@ -101,8 +101,9 @@ ReadAudio* audioReader;
 ChooseFile* fileChooser;
 
 // Effects initialisation
+int numFilters = 7;
 Delay* delay;
-LPF* lpf;
+LPF* filters[7];
 
 int gainPotPin = 21;
 int ledPin = 23;
@@ -125,7 +126,9 @@ bool setup(BelaContext* context, void* userData)
     // FX
     delay = new Delay(0, 44100, 1);
 
-    lpf = new LPF(1);
+    for(int i = 0; i < numFilters; i++){
+    filters[i] = new LPF(0.4);
+    }
 
     player = new randomWavPlayer(wavList);
     player->begin();
@@ -136,6 +139,7 @@ bool setup(BelaContext* context, void* userData)
     return true;
 }
 
+        bool ReaderActive = false;
 void render(BelaContext* context, void* userData)
 {
     for (unsigned int n = 0; n < context->audioFrames; n++) {
@@ -143,14 +147,14 @@ void render(BelaContext* context, void* userData)
         float out_l = 0;
         float out_r = 0;
 
+
         // Read audio inputs
         out_l = audioRead(context, n, 0);
         out_r = audioRead(context, n, 1);
 
         audioSaver->write(out_l);
         // FX
-        out_l = delay->applyEffect(out_l);
-        //out_l = lpf->process(out_l);
+        out_l += delay->applyEffect(out_l);
 
         k++;
         // std::cout << "k = " <<k << std::endl;
@@ -165,20 +169,31 @@ void render(BelaContext* context, void* userData)
         }
         if (k == 441000){
             audioReader->readFromFile(fileChooser->chooseFile());
+            ReaderActive = true; // activate the data file readback
         }
+
+        /*if (ReaderActive){
+            std::cout << "READER IS ACTIVE " << ReaderActive << std::endl;
+            out_l += audioReader->read();
+        }*/
         
         if (player && player->isPlaying()) {
             float sample = player->process();
-            out_l = sample;
-            out_r = sample;
+            out_l += sample;
+            out_r += sample;
         }
-        
+
+        for (int i = 0; i < numFilters; i++) {
+        out_l = filters[i]->process(out_l);
+        }
         // Write the sample into the output buffer -- done!
         audioWrite(context, n, 0, out_l);
         audioWrite(context, n, 1, out_l);
     }
 }
 
+void playBinary(){
+    }
 // cleanup() is called once at the end, after the audio has stopped.
 // Release any resources that were allocated in setup().
 

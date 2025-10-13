@@ -5,19 +5,21 @@
 #include "low-passFilter.h"
 #include <iostream>
 
-
-LPF::LPF(float g){
+LPF::LPF(float g)
+{
     std::cout << "LPF - constructor" << std::endl;
     this->g = g;
 }
 
-LPF::~LPF() {
+LPF::~LPF()
+{
     std::cout << "LPF - destructor" << std::endl;
 }
 
-double LPF::process(double input) {
+double LPF::process(double input)
+{
 
-    double output = input + g*y1;
+    double output = input + g * y1;
     y1 = output;
 
     return output;

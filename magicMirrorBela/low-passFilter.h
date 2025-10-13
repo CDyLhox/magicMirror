@@ -1,4 +1,5 @@
 //
+//
 // Created by cashu on 31/05/2025.
 //
 
@@ -13,7 +14,7 @@ public:
     double process(double input);
 
 private:
-    double y1 = 0.0;
-    float g = 0.0f;
+    double y1 = 0.0; // feedbackline 
+    float g = 0.0f; // feedback (gain coeff)
 };
 
