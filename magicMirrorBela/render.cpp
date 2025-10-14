@@ -112,7 +112,13 @@ int gainPotPin = 21;
 int ledPin = 23;
 int peakValuePot = 20;
 
-int k = 0;
+float threshhold = 0.01;
+bool threshholdBool = false;
+bool prevThreshholdBool = false;
+int choosenFile;
+bool audioReaderExists = false;
+
+int counter = 0;
 
 // setup() is called once before the audio rendering starts.
 // Use it to perform any initialisation and allocation which is dependent
@@ -129,7 +135,6 @@ bool setup(BelaContext* context, void* userData)
 {
     folderInit = new audioFolderInit(chipSelect);
     audioSaver = new SaveAudio();
-    audioReader = new ReadAudio(44100 / 2);
     fileChooser = new ChooseFile();
 
     // FX
@@ -161,20 +166,27 @@ void render(BelaContext* context, void* userData)
         out_l = audioRead(context, n, 0);
         out_r = audioRead(context, n, 1);
 
-        audioSaver->write(out_l);
+        //
+        if(out_l >= threshhold){
+          threshholdBool = true;}
+        else threshholdBool = false;
+
         // FX
-        out_l += delay->applyEffect(out_l);
+        out_l = delay->applyEffect(out_l);
 
-        k++;
-        // std::cout << "k = " <<k << std::endl;
-        if (k == 441000 / 2) { //if timer is about 5 seconds, writeToFile
-            time(&timestamp);
-            std::cout << "Render; timestamp: " << timestamp << std::endl;
-            audioSaver->writeToFile(timestamp);
 
-            // if (player && !player->isPlaying()) {
-            player->playRandom();
-            //}
+        //SAVE TO BINARY AND ALSO READFROMFILE AND CHOOSEFILE
+        if(threshholdBool) audioSaver->write(out_l);
+
+        if(prevThreshholdBool == true && threshholdBool == false){
+          time(&timestamp);
+          audioSaver->writeToFile(timestamp);
+
+          //CHOOSE BIN FILE TO PLAY AND PUT IT IN A BUFFER
+          choosenFile = fileChooser->chooseFile();
+          audioReader = new ReadAudio(fileData[fileChooser->findFileIndex(choosenFile)][1]);  //find the length of the binary file to play and create audioreader with a buffer with length of that binary file
+          audioReaderExists = true;
+          audioReader->readFromFile(choosenFile);
         }
         if (k == 441000){
             audioReader->readFromFile(fileChooser->chooseFile());
@@ -195,9 +207,45 @@ void render(BelaContext* context, void* userData)
         for (int i = 0; i < numFilters; i++) {
         out_l = filters[i]->process(out_l);
         }
+
+        //PLAY .WAV FILES
+        if(!threshholdBool) {
+            //OVERWRITE OUT_L WITH .WAV FILES
+            //Pseudo code:
+            // out_l = playWavFile();
+        }
+        else {
+            //JUST ADD THE .WAV FILES
+            //Pseudo code
+            // out_l += playWavFile();
+        }
+
+
+        //READ BIN FILE --> NOW PLAYS IMMEDIATELY AFTER THE PERSON STOPS TALKING
+        if(audioReader->getBuffer() != nullptr) out_l += audioReader->read();
+        else if (audioReaderExists == true) {
+          delete audioReader;
+          audioReaderExists = false;
+		}
+
+        prevThreshholdBool = threshholdBool;
+
         // Write the sample into the output buffer -- done!
         audioWrite(context, n, 0, out_l);
         audioWrite(context, n, 1, out_l);
+
+
+//        if (k == 441000 / 2) { //if timer is about 5 seconds, writeToFile
+//            // if (player && !player->isPlaying()) {
+//            player->playRandom();
+//            //}
+//        }
+//
+//        if (player && player->isPlaying()) {
+//            float sample = player->process();
+//            out_l = sample;
+//            out_r = sample;
+//        }
     }
 }
 

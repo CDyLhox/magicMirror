@@ -15,6 +15,7 @@ public:
     void playRandom();
     bool isPlaying() const;
     float process();
+    bool isPlayingFlag = false;
 
 private:
     std::string pickRandomFile();
@@ -24,6 +25,5 @@ private:
     int sampleRate = 0;
     int channels = 0;
     size_t currentIndex = 0;
-    bool isPlayingFlag = false;
 };
 

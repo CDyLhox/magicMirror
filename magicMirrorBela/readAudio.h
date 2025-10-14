@@ -17,6 +17,9 @@ public:
   void deleteBuffer();
   void readFromFile(int timestamp);
   double read();
+  double * getBuffer(){
+    return buffer;
+  }
 
 private:
 

@@ -41,9 +41,6 @@ void ReadAudio::readFromFile(int timestamp){
         fin.close();
 
         std::cout << "ReadAudio::readFromFile= " << filename << "\n ReadAudio Buffer= " << buffer <<std::endl;
-        //clearing everything for next use
-        readHead = 0;
-        deleteBuffer();
     }
 }
 
@@ -53,11 +50,21 @@ double ReadAudio::read(){
     readHead++;
 
     std::cout << "readAudio::read()" << std::endl;
+    if(readHead == bufferSize){
+        deleteBuffer();
+        readHead = 0;
+    }
+
     return output;
 }
 
 
 void ReadAudio::deleteBuffer(){
+  if(buffer == nullptr){
+    std::cout << "ReadAudio::deleteBuffer(); buffer already deleted" << std::endl;
+  }
+  else{
     delete [] buffer;
     buffer = nullptr;
+  }
 }
