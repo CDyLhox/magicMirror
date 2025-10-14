@@ -43,12 +43,16 @@ void ReadAudio::readFromFile(int timestamp){
         std::cout << "ReadAudio::readFromFile= " << filename << "\n ReadAudio Buffer= " << buffer <<std::endl;
         //clearing everything for next use
         readHead = 0;
-        deleteBuffer();
+        //deleteBuffer();
     }
 }
 
 //you can call this after calling readFromFile to read from array 'buffer'
 double ReadAudio::read(){
+     if(readHead >= bufferSize) {
+        return 0.0;
+    }
+
     double output = buffer[readHead];
     readHead++;
 

@@ -66,11 +66,11 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 */
 
 #include <Bela.h>
-#include <cmath>    // math for trim + normalize
-#include <iostream> // logging / debugging
-#include <random>   // random file selection
-#include <string>   // standard strings
-#include <vector>   // dynamic arrays for samples
+#include <cmath>
+#include <iostream>
+#include <random>
+#include <string>
+#include <vector>
 
 #include "audioFolderInit.h"
 #include "global.h"
@@ -83,22 +83,13 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include "low-passFilter.h"
 #include "randomWavPlayer.h"
 
-
 // Audio player
-std::vector<std::string> wavList = {
-    SOURCE_DIR + "files/samples/knockWood.wav",
-    SOURCE_DIR + "files/samples/rain.wav",
-    SOURCE_DIR + "files/samples/thunder.wav",
-    SOURCE_DIR + "files/samples/waves.wav",
-    SOURCE_DIR + "files/samples/windForest.wav",
-    SOURCE_DIR + "files/samples/windowClean.wav"
-};
 randomWavPlayer* player;
 
 // Audioplayer initialisation
 audioFolderInit* folderInit;
 
-// AudioSaverReaderinitilisaion
+// AudioSaverReaderinitialisation
 SaveAudio* audioSaver;
 ReadAudio* audioReader;
 ChooseFile* fileChooser;
@@ -114,11 +105,6 @@ int peakValuePot = 20;
 
 int k = 0;
 
-// setup() is called once before the audio rendering starts.
-// Use it to perform any initialisation and allocation which is dependent
-// on the period size or sample rate.
-//
-// Return true on success; returning false halts the program.
 bool setup(BelaContext* context, void* userData)
 {
     folderInit = new audioFolderInit(chipSelect);
@@ -128,12 +114,12 @@ bool setup(BelaContext* context, void* userData)
 
     // FX
     delay = new Delay(0, 44100, 1);
-
     for(int i = 0; i < numFilters; i++){
-    filters[i] = new LPF(0.1);
+        filters[i] = new LPF(0.1);
     }
 
-    player = new randomWavPlayer(wavList);
+    // Create random player that scans the samples folder automatically
+    player = new randomWavPlayer("/root/Bela/projects/magicMirrorBela/files/samples");
     player->begin();
     player->playRandom();
 
@@ -142,63 +128,52 @@ bool setup(BelaContext* context, void* userData)
     return true;
 }
 
-        bool ReaderActive = false;
+bool ReaderActive = false;
 void render(BelaContext* context, void* userData)
 {
-    for (unsigned int n = 0; n < context->audioFrames; n++) {
+    for(unsigned int n = 0; n < context->audioFrames; n++) {
 
         float out_l = 0;
         float out_r = 0;
-
 
         // Read audio inputs
         out_l = audioRead(context, n, 0);
         out_r = audioRead(context, n, 1);
 
         audioSaver->write(out_l);
+
         // FX
         out_l += delay->applyEffect(out_l);
 
         k++;
-        // std::cout << "k = " <<k << std::endl;
-        if (k == 441000 / 2) { //if timer is about 5 seconds, writeToFile
+        if(k == 441000 / 2) { // ~5 seconds
             time(&timestamp);
-            std::cout << "Render; timestamp: " << timestamp << std::endl;
             audioSaver->writeToFile(timestamp);
-
-            // if (player && !player->isPlaying()) {
             player->playRandom();
-            //}
         }
-        if (k == 441000){
+        if(k == 441000){
             audioReader->readFromFile(fileChooser->chooseFile());
-            ReaderActive = true; // activate the data file readback
+            ReaderActive = true;
         }
 
-        /*if (ReaderActive){
-            std::cout << "READER IS ACTIVE " << ReaderActive << std::endl;
+        if(ReaderActive){
             out_l += audioReader->read();
-        }*/
-        
-        if (player && player->isPlaying()) {
+        }
+
+        if(player && player->isPlaying()) {
             float sample = player->process();
             out_l += sample;
             out_r += sample;
         }
 
-        for (int i = 0; i < numFilters; i++) {
-        out_l = filters[i]->process(out_l);
+        for(int i = 0; i < numFilters; i++) {
+            out_l = filters[i]->process(out_l);
         }
-        // Write the sample into the output buffer -- done!
+
         audioWrite(context, n, 0, out_l);
         audioWrite(context, n, 1, out_l);
     }
 }
-
-void playBinary(){
-    }
-// cleanup() is called once at the end, after the audio has stopped.
-// Release any resources that were allocated in setup().
 
 void cleanup(BelaContext* context, void* userData)
 {
@@ -207,4 +182,3 @@ void cleanup(BelaContext* context, void* userData)
     delete audioReader;
     delete player;
 }
-
