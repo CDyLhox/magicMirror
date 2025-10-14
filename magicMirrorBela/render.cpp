@@ -144,7 +144,7 @@ bool setup(BelaContext* context, void* userData)
         filters[i] = new LPF(0.1);
     }
 
-    player = new randomWavPlayer(wavList);
+    player = new randomWavPlayer(SOURCE_DIR + "samples");
     player->begin();
     player->playRandom();
 
@@ -208,14 +208,14 @@ void render(BelaContext* context, void* userData)
         //out_r+= sample;
         }
 
-        if (k % (44100*10)== 0){ // als de timer gelijk is aan 10 sec
+        if (k % (44100*30)== 0){ // als de timer gelijk is aan 10 sec
             player->playRandom();
         }
 
         if (player && player->isPlaying()) {
             float sample = player->process();
-            out_l += sample*3;
-            out_r += sample*3;
+            out_l += sample;
+            out_r += sample;
         }
 
         for (int i = 0; i < numFilters; i++) {
