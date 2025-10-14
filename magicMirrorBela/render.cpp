@@ -111,6 +111,7 @@ LPF* filters[7];
 int gainPotPin = 21;
 int ledPin = 23;
 int peakValuePot = 20;
+int k = 0;
 
 float threshhold = 0.01;
 bool threshholdBool = false;
@@ -188,17 +189,20 @@ void render(BelaContext* context, void* userData)
           audioReaderExists = true;
           audioReader->readFromFile(choosenFile);
         }
-        if (k == 441000){
-            audioReader->readFromFile(fileChooser->chooseFile());
-            ReaderActive = true; // activate the data file readback
-        }
+
+        k++;
+
+        //if (k == 441000){
+          //  audioReader->readFromFile(fileChooser->chooseFile());
+           // ReaderActive = true; // activate the data file readback
+        //}
 
         /*if (ReaderActive){
             std::cout << "READER IS ACTIVE " << ReaderActive << std::endl;
             out_l += audioReader->read();
         }*/
         
-        if (player && player->isPlaying()) {
+        /*if (player && player->isPlaying()) {
             float sample = player->process();
             out_l += sample*3;
             out_r += sample*3;
