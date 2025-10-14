@@ -73,25 +73,24 @@ Note that `audioIn`, `audioOut`, `analogIn`, `analogOut` are all arrays (buffers
 #include <vector>   // dynamic arrays for samples
 
 #include "audioFolderInit.h"
+#include "chooseFile.h"
 #include "global.h"
 #include "readAudio.h"
 #include "saveAudio.h"
-#include "chooseFile.h"
 
 #include "delay.h"
 #include "effect.h"
 #include "low-passFilter.h"
 #include "randomWavPlayer.h"
 
-
 // Audio player
 std::vector<std::string> wavList = {
-    SOURCE_DIR + "files/samples/knockWood.wav",
-    SOURCE_DIR + "files/samples/rain.wav",
-    SOURCE_DIR + "files/samples/thunder.wav",
-    SOURCE_DIR + "files/samples/waves.wav",
-    SOURCE_DIR + "files/samples/windForest.wav",
-    SOURCE_DIR + "files/samples/windowClean.wav"
+    SOURCE_DIR + "samples/knockWood.wav",
+    SOURCE_DIR + "samples/rain.wav",
+    SOURCE_DIR + "samples/thunder.wav",
+    SOURCE_DIR + "samples/waves.wav",
+    SOURCE_DIR + "samples/windForest.wav",
+    SOURCE_DIR + "samples/windowClean.wav"
 };
 randomWavPlayer* player;
 
@@ -141,8 +140,8 @@ bool setup(BelaContext* context, void* userData)
     // FX
     delay = new Delay(0, 44100, 1);
 
-    for(int i = 0; i < numFilters; i++){
-    filters[i] = new LPF(0.1);
+    for (int i = 0; i < numFilters; i++) {
+        filters[i] = new LPF(0.1);
     }
 
     player = new randomWavPlayer(wavList);
@@ -154,7 +153,8 @@ bool setup(BelaContext* context, void* userData)
     return true;
 }
 
-        bool ReaderActive = false;
+bool ReaderActive = false;
+
 void render(BelaContext* context, void* userData)
 {
     for (unsigned int n = 0; n < context->audioFrames; n++) {
@@ -162,47 +162,57 @@ void render(BelaContext* context, void* userData)
         float out_l = 0;
         float out_r = 0;
 
-
         // Read audio inputs
         out_l = audioRead(context, n, 0);
         out_r = audioRead(context, n, 1);
 
         //
-        if(out_l >= threshhold){
-          threshholdBool = true;}
-        else threshholdBool = false;
+        if (k % 44100 == 0) {
+            threshholdBool = true;
+        } else
+            threshholdBool = false;
 
         // FX
         out_l = delay->applyEffect(out_l);
 
+        // SAVE TO BINARY AND ALSO READFROMFILE AND CHOOSEFILE
+        
+        audioSaver->write(out_l);
+        if (threshholdBool){}
 
-        //SAVE TO BINARY AND ALSO READFROMFILE AND CHOOSEFILE
-        if(threshholdBool) audioSaver->write(out_l);
+        if (prevThreshholdBool == true && threshholdBool == false) {
+            time(&timestamp);
+            audioSaver->writeToFile(timestamp);
 
-        if(prevThreshholdBool == true && threshholdBool == false){
-          time(&timestamp);
-          audioSaver->writeToFile(timestamp);
-
-          //CHOOSE BIN FILE TO PLAY AND PUT IT IN A BUFFER
-          choosenFile = fileChooser->chooseFile();
-          audioReader = new ReadAudio(fileData[fileChooser->findFileIndex(choosenFile)][1]);  //find the length of the binary file to play and create audioreader with a buffer with length of that binary file
-          audioReaderExists = true;
-          audioReader->readFromFile(choosenFile);
+            // CHOOSE BIN FILE TO PLAY AND PUT IT IN A BUFFER
+            choosenFile = fileChooser->chooseFile();
+            audioReader = new ReadAudio(fileData[fileChooser->findFileIndex(choosenFile)][1]); // find the length of the binary file to play and create audioreader with a buffer with length of that binary file
+            audioReaderExists = true;
+            audioReader->readFromFile(choosenFile);
+            ReaderActive = true;
         }
 
         k++;
 
-        //if (k == 441000){
-          //  audioReader->readFromFile(fileChooser->chooseFile());
-           // ReaderActive = true; // activate the data file readback
-        //}
+        //PLAY .WAV FILES
+        //FIXME
+        if(!threshholdBool) {
 
-        /*if (ReaderActive){
-            std::cout << "READER IS ACTIVE " << ReaderActive << std::endl;
-            out_l += audioReader->read();
-        }*/
-        
-        /*if (player && player->isPlaying()) {
+        //player->playRandom();
+        //out_l= sample;
+        //out_r= sample;
+        }
+        else {
+
+        //out_l+= sample;
+        //out_r+= sample;
+        }
+
+        if (k % (44100*10)== 0){ // als de timer gelijk is aan 10 sec
+            player->playRandom();
+        }
+
+        if (player && player->isPlaying()) {
             float sample = player->process();
             out_l += sample*3;
             out_r += sample*3;
@@ -212,25 +222,17 @@ void render(BelaContext* context, void* userData)
         out_l = filters[i]->process(out_l);
         }
 
-        //PLAY .WAV FILES
-        if(!threshholdBool) {
-            //OVERWRITE OUT_L WITH .WAV FILES
-            //Pseudo code:
-            // out_l = playWavFile();
-        }
-        else {
-            //JUST ADD THE .WAV FILES
-            //Pseudo code
-            // out_l += playWavFile();
-        }
 
 
         //READ BIN FILE --> NOW PLAYS IMMEDIATELY AFTER THE PERSON STOPS TALKING
+        if(ReaderActive){
         if(audioReader->getBuffer() != nullptr) out_l += audioReader->read();
         else if (audioReaderExists == true) {
+        ReaderActive = false;
           delete audioReader;
           audioReaderExists = false;
 		}
+        }
 
         prevThreshholdBool = threshholdBool;
 
@@ -241,7 +243,7 @@ void render(BelaContext* context, void* userData)
 
 //        if (k == 441000 / 2) { //if timer is about 5 seconds, writeToFile
 //            // if (player && !player->isPlaying()) {
-//            player->playRandom();
+//         
 //            //}
 //        }
 //
@@ -253,8 +255,6 @@ void render(BelaContext* context, void* userData)
     }
 }
 
-void playBinary(){
-    }
 // cleanup() is called once at the end, after the audio has stopped.
 // Release any resources that were allocated in setup().
 
@@ -265,4 +265,3 @@ void cleanup(BelaContext* context, void* userData)
     delete audioReader;
     delete player;
 }
-

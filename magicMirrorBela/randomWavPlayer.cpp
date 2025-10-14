@@ -24,14 +24,14 @@ std::string randomWavPlayer::pickRandomFile() {
 }
 
 void randomWavPlayer::playRandom() {
-    std::cout<< "randomWavPlayer" << std::endl;
+    //std::cout<< "randomWavPlayer" << std::endl;
     if(wavFiles.empty()) {
         std::cout << "nothing to play" << std::endl;
         return;
     }
 
     std::string file = pickRandomFile();
-    std::cout << "playing " << file << std::endl;
+    //std::cout << "playing " << file << std::endl;
 
     SF_INFO sfInfo;
     SNDFILE* sndFile = sf_open(file.c_str(), SFM_READ, &sfInfo);
